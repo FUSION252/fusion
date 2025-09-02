@@ -3,264 +3,157 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Zênix Tube</title>
-<meta name="theme-color" content="#0b0010">
-<link rel="icon" href="data:image/svg+xml;utf8,
-<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'>
-  <defs>
-    <linearGradient id='bg' x1='0' y1='0' x2='1' y2='1'>
-      <stop offset='0' stop-color='%239a00ff'/>
-      <stop offset='1' stop-color='%23ff1744'/>
-    </linearGradient>
-  </defs>
-  <rect width='64' height='64' rx='14' fill='url(%23bg)'/>
-  <g transform='translate(10,10)'>
-    <circle cx='22' cy='22' r='20' fill='none' stroke='%23ffd166' stroke-width='3'/>
-    <path d='M18 12 L34 22 L18 32 Z' fill='%23ffffff'/>
-  </g>
-</svg>">
+<title>ZENIX Tube (Single)</title>
 <style>
 :root{
   --bg1:#000000; --bg2:#0b0010; --bg3:#220022; --bg4:#2e002e;
-  --neon:#9a00ff; --red:#ff1744; --gold:#ffd166;
-  --glass: rgba(255,255,255,.08); --glass-2: rgba(255,255,255,.12); --stroke: rgba(255,255,255,.18);
-  --shadow: 0 8px 26px rgba(0,0,0,.45), 0 0 24px rgba(154,0,255,.18), 0 0 22px rgba(255,23,68,.16);
+  --red:#ff1744; --neon:#a200ff;
+  --glass: rgba(255,255,255,.08);
+  --glass-2: rgba(255,255,255,.12);
+  --stroke: rgba(255,255,255,.18);
+  --shadow: 0 8px 26px rgba(0,0,0,.45),
+            0 0 24px rgba(162,0,255,.15),
+            0 0 24px rgba(255,23,68,.12);
   --radius-xl: 22px; --radius-lg: 18px; --radius-pill: 999px;
 }
 *{box-sizing:border-box}
 html,body{height:100%}
 body{
-  margin:0; color:#fff; font-family: system-ui, -apple-system, Segoe UI, Roboto, "Inter", Arial, sans-serif;
+  margin:0; font-family:"Inter",Arial,sans-serif; color:#fff;
   background:
-    radial-gradient(1200px 600px at 100% -10%, rgba(255,23,68,.18), transparent 60%),
-    radial-gradient(900px 500px at 0% 0%, rgba(154,0,255,.18), transparent 55%),
+    radial-gradient(1200px 600px at 90% -10%, rgba(255,23,68,.18), transparent 60%),
+    radial-gradient(900px 500px at 10% 0%, rgba(162,0,255,.18), transparent 55%),
     linear-gradient(180deg, var(--bg1), var(--bg2) 35%, var(--bg3) 70%, #280000 100%);
 }
-
-/* Header / Brand */
-header{padding:22px 16px 4px}
-.brand{display:flex;align-items:center;justify-content:center;gap:12px}
-.logo{
-  width:36px;height:36px;border-radius:50%;
-  background:
-    radial-gradient(circle at 35% 35%, #fff 0 15%, transparent 16%),
-    conic-gradient(from 200deg, #ff8a00, #ffd166 25%, #ff1744 55%, #9a00ff 100%);
-  box-shadow: 0 0 18px rgba(255,208,0,.55), 0 0 24px rgba(154,0,255,.35);
-  position:relative; display:grid; place-items:center;
+header{ padding:22px 16px 8px; }
+.brand{ display:flex; align-items:center; justify-content:center; gap:10px; }
+.brand .dot{width:10px; height:10px; border-radius:50%;
+  background: radial-gradient(circle at 35% 35%, #fff,#ff5a7a 35%,#9a00ff 65%,transparent 70%);
+  box-shadow:0 0 18px rgba(255,23,68,.8),0 0 14px rgba(162,0,255,.6);
 }
-.logo:after{ /* triângulo play */
-  content:""; width:0;height:0; border-left:12px solid #fff; border-top:8px solid transparent; border-bottom:8px solid transparent;
+.brand h1{margin:0; font-size:28px; font-weight:800;
+  text-shadow:0 0 18px rgba(162,0,255,.35),0 0 18px rgba(255,23,68,.25);
 }
-h1{margin:0;font-size:28px;font-weight:900;letter-spacing:.3px;
-  text-shadow:0 0 18px rgba(154,0,255,.35),0 0 18px rgba(255,23,68,.25);}
-.slogan{margin:6px 0 0; text-align:center; font-size:12px; opacity:.85}
-
-/* Nav / Buttons */
-.nav{display:grid;grid-template-columns:repeat(5,minmax(88px,1fr));gap:12px 14px;max-width:980px;margin:16px auto 8px;padding:0 16px;}
-.btn{
-  appearance:none;border:none;cursor:pointer;color:#fff; font-weight:700; font-size:14px;
-  padding:10px 14px;border-radius:var(--radius-pill);
-  background:linear-gradient(90deg, rgba(255,209,102,.16), rgba(154,0,255,.16));
-  border:1px solid var(--stroke);box-shadow:var(--shadow);backdrop-filter:blur(8px);transition:.18s;
+.nav{display:grid;grid-template-columns:repeat(5,minmax(90px,1fr));
+  gap:12px 14px; max-width:980px; margin:18px auto 8px; padding:0 16px;}
+.btn{appearance:none;border:none;cursor:pointer;color:#fff;
+  background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.06));
+  border:1px solid var(--stroke); padding:10px 14px; border-radius:var(--radius-pill);
+  font-weight:600;font-size:14px; box-shadow:var(--shadow);
+  transition:.2s; backdrop-filter:blur(8px);
 }
-.btn:hover{transform:translateY(-1px); background:linear-gradient(90deg, rgba(255,209,102,.22), rgba(154,0,255,.22));}
-.btn--accent{background:linear-gradient(90deg,#2e003e,#ff0040);border-color:transparent}
-
-/* Search */
-.search{display:flex;align-items:center;justify-content:center;gap:10px;max-width:980px;margin:10px auto 0;padding:0 16px;}
-.search__input{
-  flex:1;min-width:240px;max-width:760px;padding:12px 16px;border-radius:var(--radius-pill);
-  border:1px solid var(--stroke);background:rgba(0,0,0,.45);color:#fff;outline:none;box-shadow:var(--shadow);
-}
-.search__btn{}
-
-/* Panel / Results / Cards */
-.panel{
-  width:clamp(280px,94vw,980px);min-height:520px;margin:18px auto;padding:18px;
-  border-radius:var(--radius-xl);
-  background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.04));
-  border:1px solid var(--stroke);box-shadow:var(--shadow);
-}
+.btn:hover{transform:translateY(-1px);background:linear-gradient(180deg,var(--glass-2),var(--glass));}
+.btn--accent{background:linear-gradient(90deg,#2e003e,#ff0040);border-color:transparent;}
+.search{display:flex;align-items:center;justify-content:center;gap:10px;max-width:980px;margin:12px auto 0;padding:0 16px;}
+.search__input{flex:1;min-width:240px;max-width:760px;padding:12px 16px;
+  border-radius:var(--radius-pill);border:1px solid var(--stroke);
+  background:rgba(0,0,0,.45);color:#fff;outline:none;box-shadow:var(--shadow);}
+.panel{width:clamp(280px,94vw,980px);min-height:520px;margin:18px auto;padding:18px;
+  border-radius:var(--radius-xl);background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.04));
+  border:1px solid var(--stroke);box-shadow:var(--shadow);}
+.results{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-top:8px;}
+.card{padding:12px;border-radius:var(--radius-lg);border:1px solid rgba(255,255,255,.16);
+  background:rgba(0,0,0,.45);box-shadow:var(--shadow);}
+.card a{color:#fff;text-decoration:none;font-weight:700}
+.card p{margin:.35rem 0 0;color:#ddd;font-size:.92rem}
 .player{border:none;width:100%;height:420px;border-radius:var(--radius-lg);background:#000;box-shadow:var(--shadow);}
 .playerbar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px;}
-.playerbar .title{font-weight:800;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.playerbar .title{font-weight:700;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .link{color:#ff8aa1;text-decoration:none;font-weight:700}
-
-.results{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-top:8px;}
-.card{
-  padding:12px;border-radius:var(--radius-lg);
-  border:1px solid rgba(255,255,255,.16);
-  background:linear-gradient(180deg, rgba(0,0,0,.55), rgba(0,0,0,.35));
-  box-shadow:var(--shadow);
-}
-.card a{color:#fff;text-decoration:none;font-weight:800}
-.card p{margin:.35rem 0 0;color:#ddd;font-size:.92rem}
-.thumb{width:100%;height:140px;object-fit:cover;border-radius:12px;margin-bottom:8px;background:#111;}
-
-/* Footer */
 footer{text-align:center;padding:18px;color:#ddd;}
-footer .tag{
-  display:inline-block;padding:8px 16px;border-radius:var(--radius-pill);
-  background:linear-gradient(90deg,rgba(154,0,255,.25),rgba(255,23,68,.25));
-  border:1px solid rgba(255,255,255,.18);box-shadow:var(--shadow);
-}
-
-@media (max-width:720px){ .nav{grid-template-columns:repeat(3,1fr);} .player{height:260px;} }
+footer .tag{display:inline-block;padding:8px 16px;border-radius:var(--radius-pill);
+  background:linear-gradient(90deg,rgba(162,0,255,.25),rgba(255,23,68,.25));
+  border:1px solid rgba(255,255,255,.18);box-shadow:var(--shadow);}
+@media(max-width:720px){.nav{grid-template-columns:repeat(3,1fr);} .player{height:260px;}}
 </style>
 </head>
 <body>
-  <header>
-    <div class="brand">
-      <div class="logo" aria-hidden="true"></div>
-      <h1>Zênix Tube</h1>
-    </div>
-    <p class="slogan">Busca livre + player YouTube — sem chave, sem cartão.</p>
-  </header>
+<header>
+  <div class="brand"><span class="dot"></span><h1>ZENIX Tube</h1></div>
+</header>
 
-  <nav class="nav">
-    <button class="btn" data-q="site:youtube.com">YouTube</button>
-    <button class="btn" data-q="trending vídeos">Em alta</button>
-    <button class="btn" data-q="shorts youtube">Shorts</button>
-    <button class="btn" data-q="gameplay">Jogos</button>
-    <button class="btn" data-q="anúncios criativos">Anúncios</button>
-  </nav>
+<nav class="nav">
+  <button class="btn" data-q="youtube">YouTube</button>
+  <button class="btn" data-q="trending">Em alta</button>
+  <button class="btn" data-q="shorts">Shorts</button>
+  <button class="btn" data-q="games">Jogos</button>
+  <button class="btn" data-q="ads">Anúncios</button>
+</nav>
 
-  <section class="search">
-    <input id="q" class="search__input" placeholder="Buscar na web (DuckDuckGo)…">
-    <button id="doSearch" class="btn btn--accent search__btn">Buscar</button>
-  </section>
+<section class="search">
+  <input id="q" class="search__input" placeholder="Buscar na web (Google CSE)…" />
+  <button id="doSearch" class="btn btn--accent">Buscar</button>
+</section>
 
-  <main class="panel" aria-live="polite">
-    <div class="playerbar" id="playerbar" style="display:none">
-      <div class="title" id="playertitle">Reprodução</div>
-      <a href="#" id="closePlayer" class="link">Fechar</a>
-    </div>
-    <iframe id="player" class="player" style="display:none" allow="fullscreen; picture-in-picture"></iframe>
+<main class="panel">
+  <div class="playerbar" id="playerbar" style="display:none">
+    <div class="title" id="playertitle">Reprodução</div>
+    <a href="#" id="closePlayer" class="link">Fechar</a>
+  </div>
+  <iframe id="player" class="player" style="display:none" allow="fullscreen; picture-in-picture"></iframe>
+  <div id="results"></div>
+</main>
 
-    <div id="resultsWrap">
-      <h2 style="margin:2px 0 10px;font-size:16px;opacity:.9">Resultados</h2>
-      <div class="results" id="results"></div>
-    </div>
-  </main>
-
-  <footer><div class="tag">Zênix Tube</div></footer>
+<footer><div class="tag">ZENIX Tube</div></footer>
 
 <script>
-/* ===== Helpers ===== */
-const $ = (id)=>document.getElementById(id);
-const show = (el)=>{ el.style.display=''; };
-const hide = (el)=>{ el.style.display='none'; };
-const escapeHtml = (s)=> (s||"").replace(/[&<>"]/g, ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]));
-
-/* ===== Busca: DuckDuckGo API pública =====
-   Obs: não precisa chave; usa RelatedTopics/Abstract como resultados. */
+function getApiConfig(){
+  return {
+    key: localStorage.getItem("ZENIX_KEY") || "TANDERA_1",
+    cx: localStorage.getItem("ZENIX_CX") || "TANDERA_2"
+  };
+}
 async function doSearch(){
-  const q = $("q").value.trim();
-  if(!q){ alert("Digite algo para buscar"); return; }
-  hide($("player")); hide($("playerbar"));
-  $("results").innerHTML = "<div class='card'>Carregando…</div>";
-
+  const q=document.getElementById("q").value.trim();
+  if(!q){alert("Digite algo para buscar");return;}
+  const {key,cx}=getApiConfig();
+  document.getElementById("results").innerHTML="<div class='card'>Carregando…</div>";
   try{
-    const url = `https://api.duckduckgo.com/?q=${encodeURIComponent(q)}&format=json&no_html=1&no_redirect=1`;
-    const res = await fetch(url);
-    const data = await res.json();
-
-    const items = [];
-    function collect(rt){
-      (rt||[]).forEach(it=>{
-        if(it.Topics){ collect(it.Topics); return; }
-        if(it.FirstURL && (it.Text || it.Result)){
-          items.push({
-            url: it.FirstURL,
-            title: it.Text ? it.Text.split(" - ")[0] : (it.Result||"").replace(/<[^>]+>/g,""),
-            snippet: it.Text || "",
-            icon: (it.Icon && it.Icon.URL) ? (it.Icon.URL.startsWith("http")?it.Icon.URL:("https://duckduckgo.com"+it.Icon.URL)) : ""
-          });
-        }
-      });
-    }
-    collect(data.RelatedTopics);
-
-    if(data.AbstractURL){
-      items.unshift({
-        url: data.AbstractURL,
-        title: data.Heading || "Resultado",
-        snippet: data.AbstractText || "",
-        icon: data.Image ? (data.Image.startsWith("http")?data.Image:("https://duckduckgo.com"+data.Image)) : ""
-      });
-    }
-
-    if(items.length===0){
-      $("results").innerHTML = "<div class='card'>Nenhum resultado encontrado. Tente outros termos.</div>";
-      return;
-    }
-
-    $("results").innerHTML = items.map((it)=>{
-      const isYT = (()=>{ try{ const h=new URL(it.url).hostname.replace(/^www\./,''); return /(^|\.)youtube\.com$/.test(h) || h==='youtu.be'; }catch{ return false; }})();
-      return `
-        <article class="card">
-          ${it.icon?`<img class="thumb" alt="" src="${it.icon}">`:``}
-          <a href="${it.url}" class="open" data-open="${it.url}">${escapeHtml(it.title)}</a>
-          ${it.snippet?`<p>${escapeHtml(it.snippet)}</p>`:""}
-          ${isYT?`<p style="margin:.4rem 0 0;opacity:.75">Toque para abrir no player</p>`:""}
-        </article>
-      `;
+    const url=`https://www.googleapis.com/customsearch/v1?key=${key}&cx=${cx}&q=${encodeURIComponent(q)}&num=10`;
+    const res=await fetch(url); const data=await res.json();
+    if(!data.items){document.getElementById("results").innerHTML="<div class='card'>Nenhum resultado.</div>";return;}
+    document.getElementById("results").innerHTML=data.items.map(it=>{
+      const link=it.link; const title=it.title; const snip=it.snippet||""; const thumb=it.pagemap?.cse_thumbnail?.[0]?.src||"";
+      return `<article class='card'>${thumb?`<img src='${thumb}' style='width:100%;height:140px;object-fit:cover;border-radius:12px;margin-bottom:8px'/>`:""}
+      <a href='${link}' data-open='${link}' class='open'>${title}</a><p>${snip}</p></article>`;
     }).join("");
-
     document.querySelectorAll("a.open").forEach(a=>{
-      a.addEventListener("click", (ev)=>{
+      a.addEventListener("click",ev=>{
         ev.preventDefault();
-        const href = a.getAttribute("data-open");
-        openLinkSmart(href, a.textContent || "Reprodução");
+        openLinkSmart(a.getAttribute("data-open"),a.textContent);
       });
     });
-
-  }catch(e){
-    $("results").innerHTML = `<div class="card"><b>Erro na busca</b><p>${(e && e.message) || "Falha inesperada."}</p></div>`;
-  }
+  }catch(e){document.getElementById("results").innerHTML="<div class='card'>Erro de busca</div>";}
 }
-
-/* ===== Player YouTube (smart) ===== */
 function extractYouTubeId(u){
-  try{
-    if(u.hostname.replace(/^www\./,'') === 'youtu.be'){ return u.pathname.slice(1); }
-    if(u.searchParams.has('v')){ return u.searchParams.get('v'); }
-    const m = u.pathname.match(/\/embed\/([\w-]{6,})/i);
-    if(m) return m[1];
-  }catch{}
-  return null;
+  if(u.hostname==="youtu.be")return u.pathname.slice(1);
+  if(u.searchParams.has("v"))return u.searchParams.get("v");
+  const m=u.pathname.match(/\\/embed\\/([\\w-]+)/); return m?m[1]:null;
 }
-function openLinkSmart(href, title){
+function openLinkSmart(href,title){
   try{
-    const u = new URL(href);
-    const host = u.hostname.replace(/^www\./,'');
-    const isYouTube = /(^|\.)youtube\.com$/.test(host) || host === 'youtu.be';
-    if(isYouTube){
-      const vid = extractYouTubeId(u);
+    const u=new URL(href); const host=u.hostname.replace(/^www\\./,"");
+    if(host==="youtube.com"||host==="youtu.be"){
+      const vid=extractYouTubeId(u);
       if(vid){
-        $("playertitle").textContent = title;
-        $("player").src = `https://www.youtube-nocookie.com/embed/${vid}?autoplay=1&rel=0`;
-        show($("playerbar")); show($("player")); return;
+        document.getElementById("playertitle").textContent=title;
+        document.getElementById("player").src="https://www.youtube-nocookie.com/embed/"+vid+"?autoplay=1";
+        document.getElementById("player").style.display="block";
+        document.getElementById("playerbar").style.display="flex";
+        return;
       }
     }
-    // fallback: abrir no webview
-    window.location.href = href;
-  }catch{
-    window.location.href = href;
-  }
+    window.location.href=href;
+  }catch{window.location.href=href;}
 }
-
-/* ===== Eventos ===== */
-$("doSearch").addEventListener("click", doSearch);
-$("q").addEventListener("keydown", (e)=>{ if(e.key==="Enter") doSearch(); });
-$("closePlayer").addEventListener("click", (e)=>{
-  e.preventDefault(); $("player").src = "about:blank"; hide($("player")); hide($("playerbar"));
+document.getElementById("doSearch").addEventListener("click",doSearch);
+document.getElementById("q").addEventListener("keydown",e=>{if(e.key==="Enter")doSearch();});
+document.getElementById("closePlayer").addEventListener("click",e=>{
+  e.preventDefault(); document.getElementById("player").src="about:blank";
+  document.getElementById("player").style.display="none"; document.getElementById("playerbar").style.display="none";
 });
 document.querySelectorAll("nav.nav .btn[data-q]").forEach(btn=>{
-  btn.addEventListener("click", ()=>{
-    $("q").value = btn.getAttribute("data-q");
-    doSearch();
-  });
+  btn.addEventListener("click",()=>{document.getElementById("q").value=btn.getAttribute("data-q");doSearch();});
 });
 </script>
 </body>
