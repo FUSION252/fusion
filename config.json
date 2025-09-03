@@ -1,0 +1,9 @@
+{
+  "nome": "Zênix Tube",
+  "inicial": "https://www.youtube.com/embed/tgbNymZ7vqY",
+  "abas": [
+    { "titulo": "Documentários", "url": "https://www.youtube.com/embed/21X5lGlDOfg" },
+    { "titulo": "Lo-fi", "url": "https://www.youtube.com/embed/5qap5aO4i9A" }
+  ],
+  "ajudaHTML": "<p>Ajuda remota: edite aqui quando quiser, o app atualiza sozinho.</p>"
+}
