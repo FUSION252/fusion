@@ -1,133 +1,231 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>ZENIX Tube (YouTube API)</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Zênix Tube • Núcleo Automatizado</title>
 <style>
-:root{
-  --bg1:#000000; --bg2:#0b0010; --bg3:#220022; --bg4:#2e002e;
-  --red:#ff1744; --neon:#a200ff;
-  --glass: rgba(255,255,255,.08);
-  --glass-2: rgba(255,255,255,.12);
-  --stroke: rgba(255,255,255,.18);
-  --shadow: 0 8px 26px rgba(0,0,0,.45),
-            0 0 24px rgba(162,0,255,.15),
-            0 0 24px rgba(255,23,68,.12);
-  --radius-xl: 22px; --radius-lg: 18px; --radius-pill: 999px;
-}
-*{box-sizing:border-box}
-html,body{height:100%}
-body{
-  margin:0; font-family:"Inter",Arial,sans-serif; color:#fff;
-  background:
-    radial-gradient(1200px 600px at 90% -10%, rgba(255,23,68,.18), transparent 60%),
-    radial-gradient(900px 500px at 10% 0%, rgba(162,0,255,.18), transparent 55%),
-    linear-gradient(180deg, var(--bg1), var(--bg2) 35%, var(--bg3) 70%, #280000 100%);
-}
-header{ padding:22px 16px 8px; }
-.brand{ display:flex; align-items:center; justify-content:center; gap:10px; }
-.brand .dot{width:10px; height:10px; border-radius:50%;
-  background: radial-gradient(circle at 35% 35%, #fff,#ff5a7a 35%,#9a00ff 65%,transparent 70%);
-  box-shadow:0 0 18px rgba(255,23,68,.8),0 0 14px rgba(162,0,255,.6);
-}
-.brand h1{margin:0; font-size:28px; font-weight:800;
-  text-shadow:0 0 18px rgba(162,0,255,.35),0 0 18px rgba(255,23,68,.25);
-}
-.nav{display:grid;grid-template-columns:repeat(5,minmax(90px,1fr));
-  gap:12px 14px; max-width:980px; margin:18px auto 8px; padding:0 16px;}
-.btn{appearance:none;border:none;cursor:pointer;color:#fff;
-  background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.06));
-  border:1px solid var(--stroke); padding:10px 14px; border-radius:var(--radius-pill);
-  font-weight:600;font-size:14px; box-shadow:var(--shadow);
-  transition:.2s; backdrop-filter:blur(8px);
-}
-.btn:hover{transform:translateY(-1px);background:linear-gradient(180deg,var(--glass-2),var(--glass));}
-.btn--accent{background:linear-gradient(90deg,#2e003e,#ff0040);border-color:transparent;}
-.search{display:flex;align-items:center;justify-content:center;gap:10px;max-width:980px;margin:12px auto 0;padding:0 16px;}
-.search__input{flex:1;min-width:240px;max-width:760px;padding:12px 16px;
-  border-radius:var(--radius-pill);border:1px solid var(--stroke);
-  background:rgba(0,0,0,.45);color:#fff;outline:none;box-shadow:var(--shadow);}
-.panel{width:clamp(280px,94vw,980px);min-height:520px;margin:18px auto;padding:18px;
-  border-radius:var(--radius-xl);background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.04));
-  border:1px solid var(--stroke);box-shadow:var(--shadow);}
-.results{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-top:8px;}
-.card{padding:12px;border-radius:var(--radius-lg);border:1px solid rgba(255,255,255,.16);
-  background:rgba(0,0,0,.45);box-shadow:var(--shadow);}
-.card a{color:#fff;text-decoration:none;font-weight:700}
-.card p{margin:.35rem 0 0;color:#ddd;font-size:.92rem}
-.player{border:none;width:100%;height:420px;border-radius:var(--radius-lg);background:#000;box-shadow:var(--shadow);}
-.playerbar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px;}
-.playerbar .title{font-weight:700;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.link{color:#ff8aa1;text-decoration:none;font-weight:700}
-footer{text-align:center;padding:18px;color:#ddd;}
-footer .tag{display:inline-block;padding:8px 16px;border-radius:var(--radius-pill);
-  background:linear-gradient(90deg,rgba(162,0,255,.25),rgba(255,23,68,.25));
-  border:1px solid rgba(255,255,255,.18);box-shadow:var(--shadow);}
-@media(max-width:720px){.nav{grid-template-columns:repeat(3,1fr);} .player{height:260px;}}
+  :root{
+    --bg1:#0e0018;--bg2:#2b0030;--accent:#ff3b6e;--card:#160022;--muted:#bcaad3;
+  }
+  *{box-sizing:border-box} html,body{height:100%}
+  body{margin:0;font-family:system-ui,Segoe UI,Roboto,Arial;color:#fff;background:linear-gradient(180deg,var(--bg1),var(--bg2));display:flex;flex-direction:column}
+  header{padding:14px 16px;display:flex;align-items:center;justify-content:space-between;background:rgba(0,0,0,.25);border-bottom:1px solid rgba(255,255,255,.08);backdrop-filter:blur(6px)}
+  .brand{display:flex;align-items:center;gap:10px}
+  .logo{width:38px;height:38px;border-radius:10px;background:#fff;display:grid;place-items:center;color:#111;font-weight:800;box-shadow:0 6px 16px rgba(0,0,0,.35)}
+  .title{font-weight:800;font-size:18px;color:var(--accent);letter-spacing:.3px}
+  .actions{display:flex;gap:8px}
+  .btn{background:#33003a;color:#fff;border:1px solid rgba(255,255,255,.12);padding:10px 14px;border-radius:14px;font-weight:600;cursor:pointer;transition:.2s transform,.2s background}
+  .btn.primary{background:var(--accent);border-color:transparent}
+  .btn:active{transform:scale(.98)}
+  main{padding:14px;display:flex;flex-direction:column;gap:12px}
+  .tabs{display:flex;gap:8px;flex-wrap:wrap}
+  .tab{background:#280032;color:#fff;border:none;padding:10px 12px;border-radius:12px;font-weight:600;cursor:pointer}
+  .tab.active,.tab:hover{background:var(--accent)}
+  .wrap{width:100%;max-width:980px;margin:0 auto;background:var(--card);border-radius:16px;padding:10px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+  .player{width:100%;height:62vh;border:0;border-radius:12px;background:#000}
+  footer{margin-top:auto;padding:14px;text-align:center;color:var(--muted);font-size:13px}
+  /* Sheet (Ajuda / IA) */
+  .sheet{position:fixed;left:0;right:0;bottom:0;background:#12001c;border-top:1px solid rgba(255,255,255,.08);
+         transform:translateY(100%);transition:.28s transform;max-height:70vh;box-shadow:0 -18px 30px rgba(0,0,0,.45)}
+  .sheet.open{transform:translateY(0)}
+  .sheet .bar{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.06)}
+  .sheet .content{padding:12px;overflow:auto;max-height:calc(70vh - 48px);font-size:14px;line-height:1.5}
+  .row{display:flex;gap:8px;margin-top:10px}
+  .row input{flex:1;padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:#1a0026;color:#fff}
+  .row button{padding:10px 14px;border-radius:10px;border:1px solid rgba(255,255,255,.2);background:#2a0034;color:#fff;cursor:pointer}
+  .pill{display:inline-block;padding:6px 10px;border-radius:999px;background:#24002e;border:1px solid rgba(255,255,255,.12);margin-right:6px;margin-bottom:6px}
+  .error{background:#3d0015;border:1px solid #ff3b6e;padding:10px;border-radius:12px;margin-top:10px}
 </style>
 </head>
 <body>
+
+<!-- ================== CONFIG RÁPIDA ================== -->
+<script>
+/* 
+   Se você hospedar num repositório central (GitHub Pages, Vercel, etc.),
+   coloque aqui a URL base. Exemplo:
+   const BASE_URL = "https://seuusuario.github.io/zenix-central";
+   O app tentará buscar BASE_URL + "/config.json".
+   Se falhar, usa a config embutida (fallback).
+*/
+const BASE_URL = ""; // deixe vazio por enquanto; depois aponte pro seu repositório
+
+// Nome exibido e vídeo inicial (fallback offline)
+const FALLBACK_CONFIG = {
+  nome: "Zênix Tube",
+  inicial: "https://www.youtube.com/embed/tgbNymZ7vqY",
+  abas: [
+    { titulo: "Em alta", url: "https://www.youtube.com/embed/tgbNymZ7vqY" },
+    { titulo: "Música",  url: "https://www.youtube.com/embed/5qap5aO4i9A" },
+    { titulo: "Notícias",url: "https://www.youtube.com/embed/21X5lGlDOfg" },
+    { titulo: "Games",   url: "https://www.youtube.com/embed/hY7m5jjJ9mM" },
+    { titulo: "Clipes",  url: "https://www.youtube.com/embed/2Vv-BfVoq4g" }
+  ],
+  ajudaHTML: `
+    <p><b>Como funciona:</b></p>
+    <ul>
+      <li>Este APK é uma casca WebView. O cérebro fica no seu repositório central.</li>
+      <li>Defina <code>BASE_URL</code> apontando para seu repositório e crie um <code>config.json</code> lá.</li>
+      <li>Quando atualizar arquivos no repositório, o app se atualiza sozinho.</li>
+    </ul>
+    <p><b>Config remota (exemplo de config.json):</b></p>
+    <pre>{
+  "nome": "Zênix Tube",
+  "inicial": "https://www.youtube.com/embed/tgbNymZ7vqY",
+  "abas": [
+    {"titulo":"Documentários","url":"https://www.youtube.com/embed/21X5lGlDOfg"},
+    {"titulo":"Lo-fi","url":"https://www.youtube.com/embed/5qap5aO4i9A"}
+  ],
+  "ajudaHTML": "<p>Ajuda remota aqui…</p>"
+}</pre>
+    <p><b>IA embutida (local):</b> use o campo abaixo. Você pode plugar uma IA remota depois (endpoint próprio).</p>
+  `
+};
+</script>
+<!-- =================================================== -->
+
 <header>
-  <div class="brand"><span class="dot"></span><h1>ZENIX Tube</h1></div>
+  <div class="brand">
+    <div class="logo">ZT</div>
+    <div class="title" id="appTitle">Zênix Tube</div>
+  </div>
+  <div class="actions">
+    <button class="btn" onclick="toggleSheet()">Ajuda / IA</button>
+    <button class="btn primary" onclick="toggleFullscreen()">Tela cheia</button>
+  </div>
 </header>
 
-<section class="search">
-  <input id="q" class="search__input" placeholder="Buscar no YouTube…" />
-  <button id="doSearch" class="btn btn--accent">Buscar</button>
-</section>
-
-<main class="panel">
-  <div class="playerbar" id="playerbar" style="display:none">
-    <div class="title" id="playertitle">Reprodução</div>
-    <a href="#" id="closePlayer" class="link">Fechar</a>
+<main>
+  <div class="tabs" id="tabs"></div>
+  <div class="wrap">
+    <iframe id="player" class="player" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
   </div>
-  <iframe id="player" class="player" style="display:none" allow="fullscreen; picture-in-picture"></iframe>
-  <div id="results" class="results"></div>
 </main>
 
-<footer><div class="tag">ZENIX Tube</div></footer>
+<footer>
+  © <span id="year"></span> <span id="brandFoot">Zênix Tube</span> — casca APK + cérebro central remoto.
+</footer>
+
+<!-- Sheet: Ajuda + IA local -->
+<section id="sheet" class="sheet" aria-hidden="true">
+  <div class="bar">
+    <strong>Central de Ajuda & IA (local)</strong>
+    <button class="btn" onclick="toggleSheet()">Fechar</button>
+  </div>
+  <div class="content">
+    <div id="ajudaBox"></div>
+    <hr style="border-color:rgba(255,255,255,.08)"/>
+    <p><b>IA Local (simples):</b> faça uma pergunta curta (sobre uso do app). Ex.: “Como aumentar o player?”</p>
+    <div class="row">
+      <input id="iaInput" placeholder="Digite aqui…" />
+      <button onclick="iaResponder()">Perguntar</button>
+    </div>
+    <div id="iaOut" style="margin-top:10px;"></div>
+  </div>
+</section>
 
 <script>
-const YT_API_KEY = "AIzaSyD9FXaB1We1SIV_hVyZZFQBc2EWoTphGo";
+const q = sel => document.querySelector(sel);
+const ce = (t, c) => { const e=document.createElement(t); if(c) e.className=c; return e; };
 
-async function doSearch(){
-  const q=document.getElementById("q").value.trim();
-  if(!q){alert("Digite algo para buscar");return;}
-  document.getElementById("results").innerHTML="<div class='card'>Carregando…</div>";
+let CONFIG = JSON.parse(JSON.stringify(FALLBACK_CONFIG)); // cópia
+
+async function carregarConfigRemota(){
+  if(!BASE_URL) return false;
   try{
-    const url=`https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=10&q=${encodeURIComponent(q)}&key=${YT_API_KEY}`;
-    const res=await fetch(url); const data=await res.json();
-    if(!data.items){document.getElementById("results").innerHTML="<div class='card'>Nenhum resultado.</div>";return;}
-    document.getElementById("results").innerHTML=data.items.map(it=>{
-      const vid=it.id.videoId; const title=it.snippet.title; const snip=it.snippet.description||""; const thumb=it.snippet.thumbnails.medium.url;
-      return `<article class='card'>
-        <img src='${thumb}' style='width:100%;height:160px;object-fit:cover;border-radius:12px;margin-bottom:8px'/>
-        <a href='#' data-vid='${vid}' class='open'>${title}</a>
-        <p>${snip}</p></article>`;
-    }).join("");
-    document.querySelectorAll("a.open").forEach(a=>{
-      a.addEventListener("click",ev=>{
-        ev.preventDefault();
-        openVideo(a.getAttribute("data-vid"),a.textContent);
-      });
-    });
-  }catch(e){document.getElementById("results").innerHTML="<div class='card'>Erro na busca</div>";}
+    const url = BASE_URL.replace(/\/+$/,'') + "/config.json";
+    const res = await fetch(url, {cache:"no-store"});
+    if(!res.ok) throw new Error("HTTP "+res.status);
+    const json = await res.json();
+    // validação básica
+    if(!json.nome || !json.inicial || !Array.isArray(json.abas)) throw new Error("Config inválida");
+    CONFIG = Object.assign({}, FALLBACK_CONFIG, json);
+    return true;
+  }catch(e){
+    console.warn("[CONFIG] Falha ao carregar remota:", e);
+    return false;
+  }
 }
 
-function openVideo(vid,title){
-  document.getElementById("playertitle").textContent=title;
-  document.getElementById("player").src="https://www.youtube-nocookie.com/embed/"+vid+"?autoplay=1";
-  document.getElementById("player").style.display="block";
-  document.getElementById("playerbar").style.display="flex";
+function montarUI(){
+  // título / rodapé
+  q("#appTitle").textContent = CONFIG.nome || "Zênix Tube";
+  q("#brandFoot").textContent = CONFIG.nome || "Zênix Tube";
+  q("#year").textContent = new Date().getFullYear();
+
+  // abas
+  const tabs = q("#tabs");
+  tabs.innerHTML = "";
+  CONFIG.abas.forEach((a, i)=>{
+    const b = ce("button","tab"+(i===0?" active":""));
+    b.textContent = a.titulo;
+    b.onclick = ()=>loadVideo(a.url, b);
+    tabs.appendChild(b);
+  });
+
+  // player
+  q("#player").src = CONFIG.inicial;
+
+  // ajuda
+  q("#ajudaBox").innerHTML = CONFIG.ajudaHTML || FALLBACK_CONFIG.ajudaHTML;
 }
 
-document.getElementById("doSearch").addEventListener("click",doSearch);
-document.getElementById("q").addEventListener("keydown",e=>{if(e.key==="Enter")doSearch();});
-document.getElementById("closePlayer").addEventListener("click",e=>{
-  e.preventDefault(); document.getElementById("player").src="about:blank";
-  document.getElementById("player").style.display="none"; document.getElementById("playerbar").style.display="none";
-});
+function loadVideo(url, el){
+  q("#player").src = url;
+  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+  el && el.classList.add("active");
+}
+
+function toggleFullscreen(){
+  const el = q(".wrap");
+  if(document.fullscreenElement){ document.exitFullscreen?.(); return; }
+  (el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen)?.call(el);
+}
+
+function toggleSheet(){
+  const s=q("#sheet"); s.classList.toggle("open");
+  s.setAttribute("aria-hidden", s.classList.contains("open")?"false":"true");
+}
+
+/* ===== IA LOCAL SIMPLES (regras básicas) =====
+   Objetivo: responder dúvidas de uso sem internet.
+   Depois você pode trocar essa função pra chamar sua IA remota (fetch pra BASE_URL + /api/ia, por exemplo).
+*/
+function iaResponder(){
+  const box = q("#iaOut");
+  const txt = (q("#iaInput").value||"").trim().toLowerCase();
+  if(!txt){ box.innerHTML = `<div class="error">Digite uma pergunta.</div>`; return; }
+
+  let resp = "";
+  if(txt.includes("aumentar") && txt.includes("player")){
+    resp = "Vá em Ajuda → Config remota e aumente a altura mudando a classe .player de 62vh para 70vh ou 75vh.";
+  }else if(txt.includes("sem internet") || txt.includes("offline")){
+    resp = "Funciona offline com a configuração embutida. Para atualizar sem reinstalar, hospede a config no repositório e defina BASE_URL.";
+  }else if(txt.includes("atualiza") || txt.includes("update")){
+    resp = "Atualizações são instantâneas: edite o config.json no repositório; o app baixa na próxima abertura.";
+  }else if(txt.includes("apk") && (txt.includes("gerar") || txt.includes("converter"))){
+    resp = "Use um gerador de APK por WebView apontando para este index.html (local ou hospedado). O APK será a casca; o repositório é o cérebro.";
+  }else if(txt.includes("mudar") && (txt.includes("nome") || txt.includes("título"))){
+    resp = "Troque o campo 'nome' no config.json do repositório (ou edite o FALLBACK_CONFIG.nome no arquivo).";
+  }else{
+    resp = "Dica: defina BASE_URL para seu repositório e crie um config.json com { nome, inicial, abas[], ajudaHTML }. O app se monta sozinho.";
+  }
+
+  box.innerHTML = `<div class="pill">IA</div> ${resp}`;
+}
+
+// boot
+(async ()=>{
+  const ok = await carregarConfigRemota();
+  if(!ok && BASE_URL){
+    // mostra aviso, mas segue com fallback
+    const warn = ce("div","error");
+    warn.innerHTML = "Não foi possível carregar a configuração remota. Usando configuração local.";
+    q("main").prepend(warn);
+  }
+  montarUI();
+})();
 </script>
 </body>
 </html>
