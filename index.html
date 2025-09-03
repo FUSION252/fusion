@@ -1,197 +1,413 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Fênix • Iara Player</title>
-<meta name="theme-color" content="#0b0b0e" />
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fênix • Builder (AIDE + Termux em 1)</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
 <style>
-  :root{--bg:#0b0b0e;--card:#121219;--ink:#e9e9f4;--muted:#a7a7bd;--accent:#8a5cff;--danger:#ff5c7a}
-  *{box-sizing:border-box} body{margin:0;background:#0a0a10;color:var(--ink);
-    font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial}
-  .wrap{max-width:980px;margin:0 auto;padding:16px}
-  .bar{position:sticky;top:0;z-index:20;background:rgba(10,10,16,.9);backdrop-filter:blur(6px);
-    border-bottom:1px solid rgba(255,255,255,.06);padding:12px 16px;display:flex;align-items:center;gap:10px}
-  .brand{display:flex;align-items:center;gap:10px;font-weight:700}
-  .brand svg{filter:drop-shadow(0 4px 14px rgba(138,92,255,.45))}
-  .tag{font-size:.75rem;padding:.15rem .5rem;border-radius:999px;background:rgba(138,92,255,.18);color:#d7c9ff}
-  .card{background:var(--card);border:1px solid rgba(255,255,255,.06);border-radius:16px;overflow:hidden;
-    box-shadow:0 10px 28px rgba(0,0,0,.35)}
-  .stage{position:relative;aspect-ratio:16/9;background:#000}
-  #player{position:absolute;inset:0}
-  .controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;
-    padding:10px;border-top:1px solid rgba(255,255,255,.06);background:rgba(0,0,0,.25)}
-  .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-  .btn{display:inline-flex;align-items:center;gap:6px;padding:.55rem .8rem;border-radius:12px;
-    border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);color:var(--ink);cursor:pointer}
-  .btn:hover{background:rgba(255,255,255,.07)} .btn.primary{background:linear-gradient(135deg,var(--accent),#6b44ff);border-color:transparent}
-  .input{flex:1;min-width:220px;display:flex;align-items:center;gap:.5rem;background:rgba(255,255,255,.04);
-    border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:.5rem .7rem}
-  .input input{flex:1;background:transparent;border:0;outline:0;color:var(--ink);font-size:.95rem}
-  .hint{color:var(--muted);font-size:.85rem}
-  .panels{display:grid;gap:12px;margin-top:12px} @media(min-width:900px){.panels{grid-template-columns:1.3fr .7fr}}
-  .panel{background:var(--card);border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:12px}
-  .panel h3{margin:4px 0 10px 0;font-size:1rem;color:#dcdcf3}
-  .log{height:170px;overflow:auto;background:rgba(0,0,0,.25);border:1px dashed rgba(255,255,255,.12);
-    border-radius:12px;padding:.6rem;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.9rem;line-height:1.35;color:#d9e2ff}
-  .footer{opacity:.7;text-align:center;margin:14px 0}
-  .vol{display:flex;align-items:center;gap:6px} input[type="range"]{width:140px}
+:root{
+  --bg:#0b0b10;--card:#12131a;--ink:#f2f3f7;--muted:#a9adc2;--accent:#7c5cff;--ok:#42d3b6;--warn:#ffb65c;--err:#ff5c7a;
+}
+*{box-sizing:border-box} body{margin:0;background:radial-gradient(1200px 600px at 20% -10%,#181a25 0,#0b0b10 60%);color:var(--ink);
+font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial}
+.top{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:.8rem;padding:.9rem 1rem;background:rgba(10,10,14,.8);backdrop-filter:blur(6px);border-bottom:1px solid rgba(255,255,255,.06)}
+.logo{display:flex;align-items:center;gap:.6rem;font-weight:700;letter-spacing:.2px}
+.badge{font-size:.75rem;padding:.18rem .5rem;border-radius:999px;background:rgba(124,92,255,.18);color:#dacfff}
+.shell{max-width:1100px;margin:1rem auto;padding:0 1rem}
+.card{background:var(--card);border:1px solid rgba(255,255,255,.06);border-radius:18px;padding:1rem 1.1rem;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+.grid{display:grid;gap:1rem}.two{grid-template-columns:1.2fr .8fr}
+h2{margin:.3rem 0 1rem 0;font-size:1.15rem;color:#e9e9ff}
+.row{display:flex;gap:.7rem;align-items:center;flex-wrap:wrap}
+label{font-size:.9rem;color:#d7d7ef}
+input,select,textarea{width:100%;padding:.6rem .7rem;border-radius:12px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);color:var(--ink);outline:0}
+small{color:var(--muted)}
+.btn{display:inline-flex;align-items:center;gap:.45rem;padding:.7rem 1rem;border-radius:12px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.05);color:var(--ink);cursor:pointer;user-select:none}
+.btn:hover{background:rgba(255,255,255,.08)} .btn.primary{background:linear-gradient(135deg,var(--accent),#5b44ff);border-color:transparent}
+.btn.ok{background:linear-gradient(135deg,var(--ok),#19bfa1);border-color:transparent}
+.btn.warn{background:linear-gradient(135deg,var(--warn),#ff8e2f);border-color:transparent}
+.help{font-size:.88rem;color:#cbd0e8}
+.log{height:200px;overflow:auto;background:rgba(0,0,0,.25);border:1px dashed rgba(255,255,255,.12);border-radius:12px;padding:.6rem;
+font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.9rem;line-height:1.35}
+footer{opacity:.8;text-align:center;margin:1.1rem 0 2rem}
+hr{border:0;border-top:1px solid rgba(255,255,255,.08);margin:1rem 0}
+.kbd{font-family:ui-monospace,Menlo,Consolas,monospace;background:rgba(255,255,255,.08);padding:0 .35rem;border-radius:.35rem}
 </style>
 </head>
 <body>
-  <div class="bar">
-    <div class="brand">
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M12 2l2.39 4.85 5.35.78-3.87 3.77.91 5.33L12 14.8 7.22 16.73l.91-5.33-3.87-3.77 5.35-.78L12 2z" stroke="#8a5cff" stroke-width="1.2"/></svg>
-      <span>Fênix</span><span class="tag">Iara</span>
+  <div class="top">
+    <div class="logo">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M12 2l2.39 4.847 5.35.777-3.87 3.77.913 5.324L12 14.77l-4.783 2.948.913-5.324-3.87-3.77 5.35-.777L12 2z" stroke="#8a5cff" stroke-width="1.2"/></svg>
+      <span>Fênix • Builder</span><span class="badge">Iara automática</span>
     </div>
   </div>
 
-  <div class="wrap">
+  <div class="shell grid two">
     <div class="card">
-      <div class="stage"><div id="player"></div></div>
-      <div class="controls">
-        <div class="row">
-          <button class="btn" id="prev">⏮️</button>
-          <button class="btn primary" id="play">▶️</button>
-          <button class="btn" id="pause">⏸️</button>
-          <button class="btn" id="next">⏭️</button>
-          <button class="btn" id="mute">🔇</button>
-          <div class="vol"><span class="hint">🔊</span><input type="range" id="vol" min="0" max="100" value="80"><span class="hint" id="volVal">80%</span></div>
-          <button class="btn" id="fs">⛶</button>
+      <h2>Configurar aplicativo</h2>
+      <div class="row" style="gap:1rem">
+        <div style="flex:1">
+          <label>Nome do App</label>
+          <input id="appName" placeholder="Ex.: Fênix">
         </div>
-        <div class="row" style="flex:1">
-          <div class="input"><span>🔎</span><input id="q" placeholder="Buscar e tocar (ex.: músicas relaxantes)"></div>
-          <button class="btn" id="go">Buscar & Tocar</button>
+        <div style="flex:1">
+          <label>Package (ID único)</label>
+          <input id="pkg" placeholder="ex.: com.seuprojeto.fenix">
+        </div>
+      </div>
+
+      <div class="row" style="gap:1rem;margin-top:.6rem">
+        <div>
+          <label>Modo</label>
+          <select id="mode">
+            <option value="weburl">WebView a partir de URL</option>
+            <option value="assets">Assets locais (pasta HTML)</option>
+          </select>
+        </div>
+        <div style="flex:1" id="urlWrap">
+          <label>URL inicial (se usar WebView)</label>
+          <input id="startUrl" placeholder="https://sua-pagina.exemplo">
+        </div>
+      </div>
+
+      <div id="assetsWrap" style="display:none;margin-top:.6rem">
+        <label>Assets HTML (opcional – seleciona uma pasta)</label>
+        <input id="assets" type="file" webkitdirectory directory multiple>
+        <small>Se enviar assets, a WebView abrirá <span class="kbd">file:///android_asset/index.html</span>.</small>
+      </div>
+
+      <div class="row" style="gap:1rem;margin-top:.6rem">
+        <div>
+          <label>Ícone (PNG 512×512)</label>
+          <input id="icon" type="file" accept="image/png">
+        </div>
+        <div style="flex:1">
+          <label>Versão</label>
+          <input id="ver" value="1.0.0">
+        </div>
+        <div>
+          <label>Code</label>
+          <input id="verCode" type="number" value="1" min="1">
+        </div>
+      </div>
+
+      <hr/>
+      <div class="row" style="justify-content:space-between">
+        <div class="help">A Iara ajusta valores por comando. Ex.: <span class="kbd">“Iara, app se chama Fênix… pacote com.seu.fenix… usar URL https://...”</span></div>
+        <div class="row">
+          <button class="btn" id="micBtn">🎤 Falar</button>
+          <button class="btn primary" id="gen">Gerar Projeto (ZIP)</button>
         </div>
       </div>
     </div>
 
-    <div class="panels">
-      <div class="panel">
-        <h3>Iara — comandos por texto/voz</h3>
-        <div class="row">
-          <div class="input"><span>💬</span><input id="cmd" placeholder='Ex.: "Iara, tocar rock nacional" • "Iara, pausar" • "Iara, próximo" • "Iara, volume 60"' /></div>
-          <button class="btn" id="run">Executar</button>
-          <button class="btn" id="mic">🎤 Falar</button>
-        </div>
-        <p class="hint" style="margin:.6rem 0 0 0">Dicas: <em>Iara, tocar Legião Urbana</em> • <em>Iara, pausar</em> • <em>Iara, próximo</em> • <em>Iara, anterior</em> • <em>Iara, volume 40</em></p>
+    <div class="card">
+      <h2>Iara • comandos naturais</h2>
+      <div class="row">
+        <input id="cmd" placeholder='Ex.: "Iara, nome Fênix, pacote com.exemplo.fenix, usar URL https://meusite", ou "usar assets"'>
+        <button class="btn ok" id="runCmd">Executar</button>
       </div>
-      <div class="panel">
-        <h3>Status</h3>
-        <div id="log" class="log"></div>
-      </div>
+      <p class="help" style="margin:.6rem 0 0 0">Também entende: <em>versão 1.2.0</em>, <em>code 3</em>, <em>ícone</em> (use o seletor). Depois clique em <strong>Gerar Projeto (ZIP)</strong>.</p>
+      <hr/>
+      <div class="log" id="log"></div>
     </div>
-
-    <div class="footer hint">Feito com carinho • Fênix + Iara 💜</div>
   </div>
 
-  <script>
-    // Util
-    const $ = s => document.querySelector(s);
-    const log = m => { const box=$("#log"); const t=new Date().toLocaleTimeString(); box.innerHTML+=`[${t}] ${m}<br>`; box.scrollTop=box.scrollHeight; };
+  <div class="shell">
+    <div class="card">
+      <h2>Como compilar no Termux (script incluso)</h2>
+      <ol class="help">
+        <li>Copie o ZIP para o Android e <strong>extraia</strong>.</li>
+        <li>Abra o Termux na pasta do projeto e rode: <span class="kbd">bash scripts/build_termux.sh</span></li>
+        <li>Primeira compilação baixa SDK/AGP (pode demorar). Ao final, pegue o APK em <span class="kbd">app/build/outputs/apk/release/</span>.</li>
+      </ol>
+    </div>
+    <footer class="help">Fênix + Iara — uma ferramenta, três modos. Feito com carinho. 💜</footer>
+  </div>
 
-    // Player
-    let player, isMuted=false, currentQuery="músicas relaxantes";
-    function onYouTubeIframeAPIReady(){
-      player = new YT.Player('player', {
-        height:'100%', width:'100%',
-        playerVars:{modestbranding:1, rel:0, controls:1, fs:1, iv_load_policy:3, color:'white', listType:'search', list: currentQuery},
-        events:{ onReady: onReady, onError: e=>log("Erro do player: "+e.data) }
-      });
+  <!-- libs de zip/salvar -->
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
+
+<script>
+const $ = (s)=>document.querySelector(s);
+const log = (m)=>{ const b=$("#log"); const t=new Date().toLocaleTimeString(); b.innerHTML += `[${t}] ${m}<br>`; b.scrollTop=b.scrollHeight; };
+
+$("#mode").addEventListener("change", e=>{
+  const useAssets = e.target.value==="assets";
+  $("#assetsWrap").style.display = useAssets ? "block":"none";
+  $("#urlWrap").style.display    = useAssets ? "none":"block";
+});
+
+function sanitizePkg(x){
+  return (x||"").toLowerCase().replace(/[^a-z0-9_.]/g,"").replace(/^\.+|\.+$/g,"").replace(/\.+/g,".");
+}
+function asAppName(x){
+  return (x||"Fênix").replace(/[^\p{L}\p{N}\s\-_.]/gu,"").trim() || "Fênix";
+}
+
+/* ===== Iara (comandos em PT-BR) ===== */
+function handleCommand(raw){
+  if(!raw) return;
+  log("Você: "+raw);
+  let t = raw.toLowerCase();
+  t = t.replace(/^iara[, ]*/,"").trim();
+
+  // nome
+  const nome = t.match(/nome\s+(.+?)(,|$)/) || t.match(/se chama\s+(.+?)(,|$)/) || t.match(/app\s+(.+?)(,|$)/);
+  if(nome){ $("#appName").value = nome[1].trim(); log("Iara: nome → "+$("#appName").value); }
+
+  // pacote
+  const pkg = t.match(/pacote\s+([a-z0-9_.]+)/) || t.match(/package\s+([a-z0-9_.]+)/);
+  if(pkg){ $("#pkg").value = sanitizePkg(pkg[1]); log("Iara: package → "+$("#pkg").value); }
+
+  // versão
+  const ver = t.match(/vers[aã]o\s+(\d+\.\d+\.\d+)/);
+  if(ver){ $("#ver").value = ver[1]; log("Iara: versão → "+$("#ver").value); }
+
+  // code
+  const vc = t.match(/code\s+(\d+)/) || t.match(/c[oó]digo\s+(\d+)/);
+  if(vc){ $("#verCode").value = parseInt(vc[1],10); log("Iara: versionCode → "+$("#verCode").value); }
+
+  // modo e URL
+  if(t.includes("usar assets") || t.includes("assets")){ $("#mode").value="assets"; $("#assetsWrap").style.display="block"; $("#urlWrap").style.display="none"; log("Iara: modo → assets locais"); }
+  const urlm = t.match(/(url|abrir|usar)\s+(https?:\/\/\S+)/);
+  if(urlm){ $("#mode").value="weburl"; $("#assetsWrap").style.display="none"; $("#urlWrap").style.display="block"; $("#startUrl").value=urlm[2]; log("Iara: URL → "+$("#startUrl").value); }
+}
+
+$("#runCmd").onclick = ()=> handleCommand($("#cmd").value.trim());
+$("#cmd").addEventListener("keydown", e=>{ if(e.key==="Enter") $("#runCmd").click(); });
+
+/* Voz (se disponível) */
+let rec, listening=false;
+(function voice(){
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SR){ $("#micBtn").disabled = true; $("#micBtn").title="Navegador sem voz"; return; }
+  rec = new SR(); rec.lang="pt-BR"; rec.interimResults=false; rec.maxAlternatives=1;
+  rec.onresult = (e)=>{ const said=e.results[0][0].transcript; $("#cmd").value=said; log("🎤 "+said); handleCommand(said); };
+  rec.onend = ()=>{ listening=false; $("#micBtn").textContent="🎤 Falar"; };
+  rec.onerror = (e)=>{ listening=false; $("#micBtn").textContent="🎤 Falar"; log("⚠️ Voz: "+e.error); };
+  $("#micBtn").onclick = ()=>{ if(listening){rec.stop();return;} listening=true; $("#micBtn").textContent="🛑 Parar"; rec.start(); };
+})();
+
+/* ===== Geração do projeto (ZIP) ===== */
+$("#gen").onclick = async ()=>{
+  const name = asAppName($("#appName").value);
+  const pkg  = sanitizePkg($("#pkg").value||"com.fenix.app");
+  const ver  = $("#ver").value||"1.0.0";
+  const vc   = parseInt($("#verCode").value||"1",10);
+  const mode = $("#mode").value;
+  const startUrl = $("#startUrl").value.trim() || "https://example.com";
+
+  if(mode==="weburl" && !/^https?:\/\//i.test(startUrl)){
+    log("⚠️ Informe uma URL válida (http/https)."); return;
+  }
+
+  const zip = new JSZip();
+  const root = zip.folder(name.replace(/\s+/g,"_") + "-android");
+
+  // Arquivos de nível de projeto
+  root.file("settings.gradle", `rootProject.name = "${name.replace(/"/g,'\\"')}"\ninclude(":app")\n`);
+  root.file("gradle.properties", "org.gradle.jvmargs=-Xmx2g -Dfile.encoding=UTF-8\n");
+
+  root.file("build.gradle", `buildscript {
+    repositories { google(); mavenCentral() }
+    dependencies { classpath 'com.android.tools.build:gradle:8.3.2' }
+}
+allprojects { repositories { google(); mavenCentral() } }
+tasks.register("clean", Delete) { delete rootProject.buildDir }
+`);
+
+  // App module
+  const app = root.folder("app");
+  app.file("build.gradle", `
+plugins { id 'com.android.application' }
+android {
+  namespace '${pkg}'
+  compileSdk 34
+  defaultConfig {
+    applicationId '${pkg}'
+    minSdk 24
+    targetSdk 34
+    versionCode ${vc}
+    versionName '${ver}'
+  }
+  buildTypes {
+    release {
+      minifyEnabled true
+      proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'),'proguard-rules.pro'
     }
-    function onReady(){ log("Player pronto. Clique ▶️ para iniciar."); player.setVolume(80); }
+    debug { minifyEnabled false }
+  }
+  packaging { resources { excludes += ['META-INF/*'] } }
+}
+dependencies {
+  implementation 'androidx.core:core-ktx:1.13.1'
+  implementation 'androidx.appcompat:appcompat:1.7.0'
+  implementation 'com.google.android.material:material:1.12.0'
+}
+`);
 
-    // Controles
-    $("#play").onclick = ()=>{ player?.playVideo(); log("▶️ Reproduzir"); };
-    $("#pause").onclick= ()=>{ player?.pauseVideo(); log("⏸️ Pausar"); };
-    $("#next").onclick = ()=>{ player?.nextVideo(); log("⏭️ Próximo"); };
-    $("#prev").onclick = ()=>{ player?.previousVideo(); log("⏮️ Anterior"); };
-    $("#mute").onclick = ()=>{
-      if(!player) return;
-      isMuted ? (player.unMute(), log("🔊 Som ativado")) : (player.mute(), log("🔇 Mudo"));
-      isMuted=!isMuted;
-    };
-    $("#vol").oninput = e=>{ const v=+e.target.value; $("#volVal").textContent=v+"%"; player?.setVolume(v); };
-    $("#fs").onclick = ()=>{
-      const el = document.querySelector(".stage");
-      if(document.fullscreenElement) document.exitFullscreen();
-      else el.requestFullscreen?.();
-    };
+  app.file("proguard-rules.pro", "");
 
-    // Busca
-    function searchAndPlay(q){
-      if(!q || !player) return;
-      currentQuery=q;
-      player.loadPlaylist({ listType:'search', list:q, index:0, startSeconds:0, suggestedQuality:'default' });
-      log("🔎 Tocando resultados para: "+q);
+  // Manifest
+  app.folder("src/main").file("AndroidManifest.xml", `<?xml version="1.0" encoding="utf-8"?>
+<manifest package="${pkg}" xmlns:android="http://schemas.android.com/apk/res/android">
+  <uses-permission android:name="android.permission.INTERNET"/>
+  <application android:label="${name}" android:icon="@mipmap/ic_launcher" android:usesCleartextTraffic="true">
+    <activity android:name=".MainActivity" android:exported="true">
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN"/>
+        <category android:name="android.intent.category.LAUNCHER"/>
+      </intent-filter>
+    </activity>
+  </application>
+</manifest>`);
+
+  // Kotlin Activity (WebView)
+  const isAssets = (mode==="assets");
+  const loadLine = isAssets
+    ? `web.loadUrl("file:///android_asset/index.html")`
+    : `web.loadUrl("${startUrl.replace(/"/g,'\\"')}")`;
+
+  app.folder("src/main/java/"+pkg.replace(/\./g,"/")).file("MainActivity.kt", `
+package ${pkg}
+import android.os.Bundle
+import android.webkit.WebSettings
+import android.webkit.WebView
+import android.webkit.WebViewClient
+import androidx.appcompat.app.AppCompatActivity
+
+class MainActivity: AppCompatActivity() {
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    val web = WebView(this)
+    setContentView(web)
+    with(web.settings){
+      javaScriptEnabled = true
+      domStorageEnabled = true
+      mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
+      useWideViewPort = true
+      loadWithOverviewMode = true
+      mediaPlaybackRequiresUserGesture = false
     }
-    $("#go").onclick = ()=> searchAndPlay( $("#q").value.trim() );
-    $("#q").addEventListener('keydown', e=>{ if(e.key==='Enter') $("#go").click(); });
+    web.webViewClient = object: WebViewClient() {}
+    ${loadLine}
+  }
+  override fun onBackPressed() {
+    val w = (this.findViewById(android.R.id.content) as android.view.ViewGroup).getChildAt(0) as WebView
+    if(w.canGoBack()) w.goBack() else super.onBackPressed()
+  }
+}
+`);
 
-    // Comandos Iara (texto)
-    $("#run").onclick = ()=> handleCmd( $("#cmd").value.trim() );
-    $("#cmd").addEventListener('keydown', e=>{ if(e.key==='Enter') $("#run").click(); });
+  // Layout opcional (usando WebView direto na Activity, simples)
+  const res = app.folder("src/main/res");
+  res.folder("mipmap-anydpi-v26").file("ic_launcher.xml",
+`<?xml version="1.0" encoding="utf-8"?>
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+  <background android:drawable="@color/ic_launcher_bg"/>
+  <foreground android:drawable="@drawable/ic_launcher_foreground"/>
+</adaptive-icon>`);
 
-    function handleCmd(raw){
-      if(!raw){ log("Iara: diga algo como “Iara, tocar …”"); return; }
-      log("Você: "+raw);
-      const txt = raw.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
-      const s = txt.replace(/^iara[, ]*/,'').trim();
+  res.folder("values").file("colors.xml", `<?xml version="1.0" encoding="utf-8"?><resources><color name="ic_launcher_bg">#111219</color></resources>`);
 
-      if(/^paus(ar)?$/.test(s) || s.includes("pausar")){ player?.pauseVideo(); log("Iara: pausando."); return; }
-      if(s.includes("proximo") || s.includes("próximo")){ player?.nextVideo(); log("Iara: próximo vídeo."); return; }
-      if(s.includes("anterior") || s.includes("voltar")){ player?.previousVideo(); log("Iara: vídeo anterior."); return; }
+  // Ícone (usa PNG enviado como foreground “bruto”)
+  const drawable = res.folder("drawable");
+  const iconFile = $("#icon").files[0];
+  if(iconFile){
+    const buf = await iconFile.arrayBuffer();
+    drawable.file("ic_launcher_foreground.png", buf);
+  } else {
+    // ícone fallback simples (SVG convertido em XML-Vector? – vamos cair para um PNG mínimo embutido)
+    const png1x1 = atob("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMB/erwfnkAAAAASUVORK5CYII=");
+    drawable.file("ic_launcher_foreground.png", new Uint8Array([...png1x1].map(c=>c.charCodeAt(0))));
+  }
 
-      const vol = s.match(/volume\s*(\d{1,3})/);
-      if(vol){ let v=Math.max(0,Math.min(100,parseInt(vol[1],10))); player?.setVolume(v); $("#vol").value=v; $("#volVal").textContent=v+"%"; log(`Iara: volume em ${v}%.`); return; }
-
-      // "tocar X" / "reproduzir X" / "abrir <id/url>"
-      if(s.startsWith("abrir ")){
-        const rest = s.replace("abrir","").trim();
-        const id = extractYouTubeId(rest);
-        if(id){ player?.loadVideoById(id); log("Iara: abrindo vídeo solicitado."); return; }
+  // Assets locais (se houver)
+  if(isAssets){
+    const assets = app.folder("src/main/assets");
+    const files = $("#assets").files;
+    if(files && files.length){
+      for(const f of files){
+        const path = ("assets/"+f.webkitRelativePath.replace(/^.*?\//,"")).replace(/^assets\//,"");
+        const data = await f.arrayBuffer();
+        assets.file(path, data);
       }
-      const m = s.match(/^(tocar|reproduzir)\s+(.+)$/);
-      if(m){ searchAndPlay(m[2].trim()); log(`Iara: procurando “${m[2].trim()}”.`); return; }
-
-      // fallback: tratar como busca
-      searchAndPlay(s);
-      log(`Iara: buscando “${s}”.`);
+    } else {
+      // índice mínimo se nenhum asset enviado
+      app.folder("src/main/assets").file("index.html",
+`<!doctype html><html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${name}</title><body style="font-family:system-ui;background:#0b0b10;color:#e9e9ff">
+<h1 style="font-weight:700">${name}</h1><p>Seu app de assets está pronto. Substitua este <code>index.html</code>.</p></body></html>`);
     }
+  }
 
-    function extractYouTubeId(text){
-      try{
-        const u = new URL(text);
-        if(u.hostname.includes("youtube.com")) return u.searchParams.get("v");
-        if(u.hostname.includes("youtu.be")) return u.pathname.slice(1);
-      }catch(_){}
-      if(/^[\w-]{11}$/.test(text)) return text;
-      return null;
-    }
+  // Script Termux
+  const scripts = root.folder("scripts");
+  scripts.file("build_termux.sh", `#!/data/data/com.termux/files/usr/bin/bash
+set -e
+echo "[Fênix] Atualizando Termux e instalando dependências..."
+pkg update -y && pkg upgrade -y
+pkg install -y openjdk-17 gradle wget unzip git
+export JAVA_HOME=$(dirname $(dirname $(readlink -f $(which javac)))) || true
 
-    // Voz (HTTPS necessário)
-    let rec, listening=false;
-    (function initVoice(){
-      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-      if(!SR){ $("#mic").disabled=true; $("#mic").title="Sem suporte de voz"; return; }
-      rec = new SR(); rec.lang='pt-BR'; rec.interimResults=false; rec.maxAlternatives=1;
-      rec.onresult = e=>{ const said=e.results[0][0].transcript; $("#cmd").value=said; log("🎤 Você: "+said); handleCmd(said); };
-      rec.onend = ()=>{ listening=false; $("#mic").textContent="🎤 Falar"; log("🎤 microfone parado."); };
-      rec.onerror = e=>{ listening=false; $("#mic").textContent="🎤 Falar"; log("⚠️ Voz: "+e.error); };
-    })();
-    $("#mic").onclick = ()=>{
-      if(!rec){ log("⚠️ Voz não suportada neste navegador."); return; }
-      if(listening){ rec.stop(); return; }
-      listening=true; $("#mic").textContent="🛑 Parar"; log("🎤 ouvindo…");
-      rec.start();
-    };
+# Android SDK
+export ANDROID_HOME=$HOME/android-sdk
+export ANDROID_SDK_ROOT=$ANDROID_HOME
+export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH
 
-    // Carrega API do YouTube
-    (function loadYT(){
-      const s = document.createElement('script');
-      s.src="https://www.youtube.com/iframe_api";
-      document.head.appendChild(s);
-    })();
-  </script>
+mkdir -p "$ANDROID_HOME"
+cd "$ANDROID_HOME"
+if [ ! -d cmdline-tools ]; then
+  echo "[Fênix] Baixando Android cmdline-tools..."
+  wget -q https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O cmdtools.zip
+  mkdir -p cmdline-tools && unzip -q cmdtools.zip -d cmdline-tools-tmp
+  mkdir -p cmdline-tools/latest
+  mv cmdline-tools-tmp/cmdline-tools/* cmdline-tools/latest/
+  rm -rf cmdline-tools-tmp cmdtools.zip
+fi
+
+yes | sdkmanager --sdk_root="$ANDROID_HOME" --licenses
+sdkmanager --sdk_root="$ANDROID_HOME" "platform-tools" "platforms;android-34" "build-tools;34.0.0"
+
+echo "[Fênix] Criando local.properties..."
+cd "$(dirname "$0")/.."
+echo "sdk.dir=$ANDROID_HOME" > local.properties
+
+echo "[Fênix] Gerando Gradle Wrapper..."
+gradle wrapper --gradle-version 8.7
+
+echo "[Fênix] Compilando APK (assembleRelease)..."
+./gradlew --no-daemon assembleRelease
+
+echo "[Fênix] OK! Arquivo em: app/build/outputs/apk/release/"
+`);
+
+  // README
+  root.file("README.txt", `FÊNIX – BUILDER
+=================
+App: ${name}
+Package: ${pkg}
+Versão: ${ver} (${vc})
+Modo: ${mode}${mode==="weburl" ? `\nURL: ${startUrl}` : `\nAssets: src/main/assets`}
+
+Como compilar no Termux:
+1) No Android, instale Termux. Copie e extraia este ZIP.
+2) Abra Termux na pasta do projeto e rode:
+   bash scripts/build_termux.sh
+3) Aguarde a instalação de SDK/AGP (primeira vez é mais demorada).
+4) APK pronto em: app/build/outputs/apk/release/
+
+Observação: você pode abrir e editar este projeto no Android Studio também.
+`);
+
+  // Compactar
+  log("📦 Gerando ZIP do projeto...");
+  const blob = await root.generateAsync({type:"blob"});
+  saveAs(blob, `${name.replace(/\s+/g,"_")}-android.zip`);
+  log("✅ Projeto gerado. Agora é só compilar no Termux usando o script incluso.");
+};
+</script>
 </body>
-</html>
+  </html>
