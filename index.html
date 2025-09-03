@@ -1,231 +1,281 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Zênix Tube • Núcleo Automatizado</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Fênix • Iara Player</title>
 <style>
   :root{
-    --bg1:#0e0018;--bg2:#2b0030;--accent:#ff3b6e;--card:#160022;--muted:#bcaad3;
+    --bg:#0b0b0e; --card:#121219; --ink:#e7e7ef; --muted:#a7a7bd; --accent:#8a5cff;
+    --accent2:#43d3b6; --danger:#ff5c7a;
   }
-  *{box-sizing:border-box} html,body{height:100%}
-  body{margin:0;font-family:system-ui,Segoe UI,Roboto,Arial;color:#fff;background:linear-gradient(180deg,var(--bg1),var(--bg2));display:flex;flex-direction:column}
-  header{padding:14px 16px;display:flex;align-items:center;justify-content:space-between;background:rgba(0,0,0,.25);border-bottom:1px solid rgba(255,255,255,.08);backdrop-filter:blur(6px)}
-  .brand{display:flex;align-items:center;gap:10px}
-  .logo{width:38px;height:38px;border-radius:10px;background:#fff;display:grid;place-items:center;color:#111;font-weight:800;box-shadow:0 6px 16px rgba(0,0,0,.35)}
-  .title{font-weight:800;font-size:18px;color:var(--accent);letter-spacing:.3px}
-  .actions{display:flex;gap:8px}
-  .btn{background:#33003a;color:#fff;border:1px solid rgba(255,255,255,.12);padding:10px 14px;border-radius:14px;font-weight:600;cursor:pointer;transition:.2s transform,.2s background}
-  .btn.primary{background:var(--accent);border-color:transparent}
-  .btn:active{transform:scale(.98)}
-  main{padding:14px;display:flex;flex-direction:column;gap:12px}
-  .tabs{display:flex;gap:8px;flex-wrap:wrap}
-  .tab{background:#280032;color:#fff;border:none;padding:10px 12px;border-radius:12px;font-weight:600;cursor:pointer}
-  .tab.active,.tab:hover{background:var(--accent)}
-  .wrap{width:100%;max-width:980px;margin:0 auto;background:var(--card);border-radius:16px;padding:10px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
-  .player{width:100%;height:62vh;border:0;border-radius:12px;background:#000}
-  footer{margin-top:auto;padding:14px;text-align:center;color:var(--muted);font-size:13px}
-  /* Sheet (Ajuda / IA) */
-  .sheet{position:fixed;left:0;right:0;bottom:0;background:#12001c;border-top:1px solid rgba(255,255,255,.08);
-         transform:translateY(100%);transition:.28s transform;max-height:70vh;box-shadow:0 -18px 30px rgba(0,0,0,.45)}
-  .sheet.open{transform:translateY(0)}
-  .sheet .bar{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.06)}
-  .sheet .content{padding:12px;overflow:auto;max-height:calc(70vh - 48px);font-size:14px;line-height:1.5}
-  .row{display:flex;gap:8px;margin-top:10px}
-  .row input{flex:1;padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:#1a0026;color:#fff}
-  .row button{padding:10px 14px;border-radius:10px;border:1px solid rgba(255,255,255,.2);background:#2a0034;color:#fff;cursor:pointer}
-  .pill{display:inline-block;padding:6px 10px;border-radius:999px;background:#24002e;border:1px solid rgba(255,255,255,.12);margin-right:6px;margin-bottom:6px}
-  .error{background:#3d0015;border:1px solid #ff3b6e;padding:10px;border-radius:12px;margin-top:10px}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Helvetica Neue',Arial;
+       background:linear-gradient(180deg,#0a0a10 0%, #0c0c14 60%, #0f0f17 100%);
+       color:var(--ink)}
+  .topbar{
+    position:sticky;top:0;z-index:50;
+    display:flex;align-items:center;gap:.8rem;
+    padding:.9rem 1rem;background:rgba(10,10,16,.9);backdrop-filter:blur(6px);
+    border-bottom:1px solid rgba(255,255,255,.06)
+  }
+  .logo{
+    display:flex;align-items:center;gap:.6rem;font-weight:700;letter-spacing:.3px
+  }
+  .badge{font-size:.75rem;padding:.18rem .5rem;border-radius:999px;background:rgba(138,92,255,.18);color:#cab6ff}
+  .shell{max-width:1100px;margin:1rem auto;padding:0 1rem}
+  .player-card{background:var(--card);border:1px solid rgba(255,255,255,.06);
+    border-radius:18px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+  .player-wrap{position:relative;aspect-ratio:16/9;background:#000}
+  #player{position:absolute;inset:0}
+  .controls{
+    display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;justify-content:space-between;
+    padding:.7rem .9rem;border-top:1px solid rgba(255,255,255,.06);background:rgba(0,0,0,.25)
+  }
+  .btn{
+    display:inline-flex;align-items:center;gap:.45rem;
+    padding:.6rem .85rem;border:1px solid rgba(255,255,255,.08);
+    background:rgba(255,255,255,.03);color:var(--ink);cursor:pointer;border-radius:12px;
+    user-select:none;transition:.15s transform ease, .15s background ease
+  }
+  .btn:hover{background:rgba(255,255,255,.07)}
+  .btn:active{transform:translateY(1px)}
+  .btn.primary{background:linear-gradient(135deg,var(--accent),#6b44ff);border-color:transparent}
+  .btn.danger{background:linear-gradient(135deg,var(--danger),#ff2f66);border-color:transparent}
+  .row{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center}
+  .input{
+    flex:1;min-width:220px;display:flex;align-items:center;gap:.5rem;background:rgba(255,255,255,.04);
+    border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:.5rem .7rem
+  }
+  .input input{flex:1;background:transparent;border:0;outline:0;color:var(--ink);font-size:.95rem}
+  .hint{color:var(--muted);font-size:.85rem}
+  .grid{display:grid;gap:1rem;margin-top:1rem}
+  @media(min-width:900px){ .grid{grid-template-columns:1.3fr .7fr} }
+  .panel{background:var(--card);border:1px solid rgba(255,255,255,.06);border-radius:18px;padding:1rem}
+  .panel h3{margin:.2rem 0  .7rem 0;font-size:1rem;color:#dcdcf3}
+  .log{
+    height:180px;overflow:auto;background:rgba(0,0,0,.25);border:1px dashed rgba(255,255,255,.12);
+    border-radius:12px;padding:.6rem;font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size:.9rem;line-height:1.35;color:#d9e2ff
+  }
+  .vol{display:flex;align-items:center;gap:.6rem}
+  input[type="range"]{width:150px}
+  .pill{font-size:.8rem;color:#cfe; background:rgba(67,211,182,.18); padding:.2rem .5rem; border-radius:999px}
+  .footer{opacity:.8;text-align:center;margin:1rem 0 2rem}
 </style>
-</head><link rel="manifest" href="manifest.json">
+</head>
 <body>
-
-<!-- ================== CONFIG RÁPIDA ================== -->
-<script>
-/* 
-   Se você hospedar num repositório central (GitHub Pages, Vercel, etc.),
-   coloque aqui a URL base. Exemplo:
-   const BASE_URL = "https://seuusuario.github.io/zenix-central";
-   O app tentará buscar BASE_URL + "/config.json".
-   Se falhar, usa a config embutida (fallback).
-*/
-const BASE_URL = ""; // deixe vazio por enquanto; depois aponte pro seu repositório
-
-// Nome exibido e vídeo inicial (fallback offline)
-const FALLBACK_CONFIG = {
-  nome: "Zênix Tube",
-  inicial: "https://www.youtube.com/embed/tgbNymZ7vqY",
-  abas: [
-    { titulo: "Em alta", url: "https://www.youtube.com/embed/tgbNymZ7vqY" },
-    { titulo: "Música",  url: "https://www.youtube.com/embed/5qap5aO4i9A" },
-    { titulo: "Notícias",url: "https://www.youtube.com/embed/21X5lGlDOfg" },
-    { titulo: "Games",   url: "https://www.youtube.com/embed/hY7m5jjJ9mM" },
-    { titulo: "Clipes",  url: "https://www.youtube.com/embed/2Vv-BfVoq4g" }
-  ],
-  ajudaHTML: `
-    <p><b>Como funciona:</b></p>
-    <ul>
-      <li>Este APK é uma casca WebView. O cérebro fica no seu repositório central.</li>
-      <li>Defina <code>BASE_URL</code> apontando para seu repositório e crie um <code>config.json</code> lá.</li>
-      <li>Quando atualizar arquivos no repositório, o app se atualiza sozinho.</li>
-    </ul>
-    <p><b>Config remota (exemplo de config.json):</b></p>
-    <pre>{
-  "nome": "Zênix Tube",
-  "inicial": "https://www.youtube.com/embed/tgbNymZ7vqY",
-  "abas": [
-    {"titulo":"Documentários","url":"https://www.youtube.com/embed/21X5lGlDOfg"},
-    {"titulo":"Lo-fi","url":"https://www.youtube.com/embed/5qap5aO4i9A"}
-  ],
-  "ajudaHTML": "<p>Ajuda remota aqui…</p>"
-}</pre>
-    <p><b>IA embutida (local):</b> use o campo abaixo. Você pode plugar uma IA remota depois (endpoint próprio).</p>
-  `
-};
-</script>
-<!-- =================================================== -->
-
-<header>
-  <div class="brand">
-    <div class="logo">ZT</div>
-    <div class="title" id="appTitle">Zênix Tube</div>
-  </div>
-  <div class="actions">
-    <button class="btn" onclick="toggleSheet()">Ajuda / IA</button>
-    <button class="btn primary" onclick="toggleFullscreen()">Tela cheia</button>
-  </div>
-</header>
-
-<main>
-  <div class="tabs" id="tabs"></div>
-  <div class="wrap">
-    <iframe id="player" class="player" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-  </div>
-</main>
-
-<footer>
-  © <span id="year"></span> <span id="brandFoot">Zênix Tube</span> — casca APK + cérebro central remoto.
-</footer>
-
-<!-- Sheet: Ajuda + IA local -->
-<section id="sheet" class="sheet" aria-hidden="true">
-  <div class="bar">
-    <strong>Central de Ajuda & IA (local)</strong>
-    <button class="btn" onclick="toggleSheet()">Fechar</button>
-  </div>
-  <div class="content">
-    <div id="ajudaBox"></div>
-    <hr style="border-color:rgba(255,255,255,.08)"/>
-    <p><b>IA Local (simples):</b> faça uma pergunta curta (sobre uso do app). Ex.: “Como aumentar o player?”</p>
-    <div class="row">
-      <input id="iaInput" placeholder="Digite aqui…" />
-      <button onclick="iaResponder()">Perguntar</button>
+  <div class="topbar">
+    <div class="logo">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M12 2l2.39 4.847 5.35.777-3.87 3.77.913 5.324L12 14.77l-4.783 2.948.913-5.324-3.87-3.77 5.35-.777L12 2z" stroke="#8a5cff" stroke-width="1.2" fill="none"/></svg>
+      <span>Fênix</span><span class="badge">Iara • IA integrada</span>
     </div>
-    <div id="iaOut" style="margin-top:10px;"></div>
   </div>
-</section>
 
-<script>
-const q = sel => document.querySelector(sel);
-const ce = (t, c) => { const e=document.createElement(t); if(c) e.className=c; return e; };
+  <div class="shell">
+    <div class="player-card">
+      <div class="player-wrap">
+        <div id="player"></div>
+      </div>
+      <div class="controls">
+        <div class="row">
+          <button class="btn" id="prevBtn">⏮️ Anterior</button>
+          <button class="btn primary" id="playBtn">▶️ Reproduzir</button>
+          <button class="btn" id="pauseBtn">⏸️ Pausar</button>
+          <button class="btn" id="nextBtn">⏭️ Próximo</button>
+          <button class="btn" id="muteBtn">🔇 Mudo</button>
+          <div class="vol">
+            <span class="hint">🔊</span>
+            <input type="range" id="vol" min="0" max="100" value="80" />
+            <span class="hint" id="volVal">80%</span>
+          </div>
+          <button class="btn" id="fsBtn">⛶ Tela inteira</button>
+        </div>
+        <div class="row" style="flex:1">
+          <div class="input" title="Buscar no YouTube e tocar aqui">
+            <span>🔎</span>
+            <input id="search" placeholder="Buscar e tocar (ex: músicas relaxantes)" />
+          </div>
+          <button class="btn" id="searchBtn">Buscar & Tocar</button>
+        </div>
+      </div>
+    </div>
 
-let CONFIG = JSON.parse(JSON.stringify(FALLBACK_CONFIG)); // cópia
+    <div class="grid">
+      <div class="panel">
+        <h3>Iara (texto ou voz) <span class="pill">comandos naturais</span></h3>
+        <div class="row">
+          <div class="input" title='Ex: "Iara, tocar Legião Urbana", "Iara, próximo", "Iara, volume 60"'>
+            <span>💬</span>
+            <input id="cmd" placeholder='Diga: "Iara, tocar música para dormir"…' />
+          </div>
+          <button class="btn" id="runCmd">Executar</button>
+          <button class="btn" id="micBtn">🎤 Falar</button>
+        </div>
+        <p class="hint" style="margin:.6rem 0 0 0">
+          Exemplos: <em>Iara, tocar rock nacional</em> • <em>Iara, pausar</em> • <em>Iara, próximo</em> • <em>Iara, volume 40</em> • <em>Iara, voltar</em>
+        </p>
+      </div>
 
-async function carregarConfigRemota(){
-  if(!BASE_URL) return false;
-  try{
-    const url = BASE_URL.replace(/\/+$/,'') + "/config.json";
-    const res = await fetch(url, {cache:"no-store"});
-    if(!res.ok) throw new Error("HTTP "+res.status);
-    const json = await res.json();
-    // validação básica
-    if(!json.nome || !json.inicial || !Array.isArray(json.abas)) throw new Error("Config inválida");
-    CONFIG = Object.assign({}, FALLBACK_CONFIG, json);
-    return true;
-  }catch(e){
-    console.warn("[CONFIG] Falha ao carregar remota:", e);
-    return false;
-  }
-}
+      <div class="panel">
+        <h3>Diálogo / Status</h3>
+        <div id="log" class="log"></div>
+      </div>
+    </div>
 
-function montarUI(){
-  // título / rodapé
-  q("#appTitle").textContent = CONFIG.nome || "Zênix Tube";
-  q("#brandFoot").textContent = CONFIG.nome || "Zênix Tube";
-  q("#year").textContent = new Date().getFullYear();
+    <div class="footer hint">Feito com carinho por nós dois • Fênix + Iara 💜</div>
+  </div>
 
-  // abas
-  const tabs = q("#tabs");
-  tabs.innerHTML = "";
-  CONFIG.abas.forEach((a, i)=>{
-    const b = ce("button","tab"+(i===0?" active":""));
-    b.textContent = a.titulo;
-    b.onclick = ()=>loadVideo(a.url, b);
-    tabs.appendChild(b);
-  });
+  <!-- YouTube IFrame API -->
+  <script>
+    // ===== Util =====
+    const $ = (sel)=>document.querySelector(sel);
+    const log = (msg)=>{ const box=$("#log"); const t=new Date().toLocaleTimeString(); box.innerHTML += `[${t}] ${msg}<br/>`; box.scrollTop=box.scrollHeight; };
 
-  // player
-  q("#player").src = CONFIG.inicial;
+    // ===== Player =====
+    let player, currentQuery = "músicas relaxantes";
+    let isMuted = false;
 
-  // ajuda
-  q("#ajudaBox").innerHTML = CONFIG.ajudaHTML || FALLBACK_CONFIG.ajudaHTML;
-}
+    function onYouTubeIframeAPIReady(){
+      player = new YT.Player('player', {
+        height: '100%',
+        width: '100%',
+        // Carrega uma "playlist de pesquisa" sem precisar de API key:
+        playerVars: { modestbranding:1, rel:0, controls:1, fs:1, iv_load_policy:3, color:'white', listType:'search', list: currentQuery },
+        events: {
+          'onReady': onPlayerReady,
+          'onError': (e)=>log("Erro no player: "+e.data)
+        }
+      });
+    }
+    function onPlayerReady(){
+      log("Player pronto. Buscando: " + currentQuery);
+      player.setVolume(80);
+    }
 
-function loadVideo(url, el){
-  q("#player").src = url;
-  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
-  el && el.classList.add("active");
-}
+    // ===== Controles =====
+    $("#playBtn").onclick = ()=>{ player && player.playVideo(); log("▶️ Reproduzir"); };
+    $("#pauseBtn").onclick = ()=>{ player && player.pauseVideo(); log("⏸️ Pausar"); };
+    $("#nextBtn").onclick = ()=>{ player && player.nextVideo(); log("⏭️ Próximo"); };
+    $("#prevBtn").onclick = ()=>{ player && player.previousVideo(); log("⏮️ Anterior"); };
+    $("#muteBtn").onclick = ()=>{
+      if(!player) return;
+      isMuted ? (player.unMute(), log("🔊 Som ativado")) : (player.mute(), log("🔇 Som desativado"));
+      isMuted = !isMuted;
+    };
+    $("#vol").oninput = (e)=>{ const v=+e.target.value; $("#volVal").textContent = v+"%"; if(player) player.setVolume(v); };
+    $("#fsBtn").onclick = ()=>{
+      const card = document.querySelector(".player-wrap");
+      if(document.fullscreenElement){ document.exitFullscreen(); }
+      else { card.requestFullscreen?.(); }
+    };
 
-function toggleFullscreen(){
-  const el = q(".wrap");
-  if(document.fullscreenElement){ document.exitFullscreen?.(); return; }
-  (el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen)?.call(el);
-}
+    // ===== Busca direta =====
+    function searchAndPlay(q){
+      if(!q || !player) return;
+      currentQuery = q;
+      // Troca a "lista por busca": playlist dinâmica com resultados da pesquisa
+      player.loadPlaylist({ listType:'search', list:q, index:0, startSeconds:0, suggestedQuality:'default' });
+      log("🔎 Tocando resultados para: " + q);
+    }
+    $("#searchBtn").onclick = ()=> searchAndPlay($("#search").value.trim());
+    $("#search").addEventListener('keydown', (e)=>{ if(e.key==='Enter') $("#searchBtn").click(); });
 
-function toggleSheet(){
-  const s=q("#sheet"); s.classList.toggle("open");
-  s.setAttribute("aria-hidden", s.classList.contains("open")?"false":"true");
-}
+    // ===== Iara (texto) =====
+    $("#runCmd").onclick = ()=> handleCommand( $("#cmd").value.trim() );
+    $("#cmd").addEventListener('keydown', (e)=>{ if(e.key==='Enter') $("#runCmd").click(); });
 
-/* ===== IA LOCAL SIMPLES (regras básicas) =====
-   Objetivo: responder dúvidas de uso sem internet.
-   Depois você pode trocar essa função pra chamar sua IA remota (fetch pra BASE_URL + /api/ia, por exemplo).
-*/
-function iaResponder(){
-  const box = q("#iaOut");
-  const txt = (q("#iaInput").value||"").trim().toLowerCase();
-  if(!txt){ box.innerHTML = `<div class="error">Digite uma pergunta.</div>`; return; }
+    function handleCommand(raw){
+      if(!raw){ log("Iara: diga algo como “Iara, tocar …”"); return; }
+      const txt = raw.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
+      log("Você: " + raw);
 
-  let resp = "";
-  if(txt.includes("aumentar") && txt.includes("player")){
-    resp = "Vá em Ajuda → Config remota e aumente a altura mudando a classe .player de 62vh para 70vh ou 75vh.";
-  }else if(txt.includes("sem internet") || txt.includes("offline")){
-    resp = "Funciona offline com a configuração embutida. Para atualizar sem reinstalar, hospede a config no repositório e defina BASE_URL.";
-  }else if(txt.includes("atualiza") || txt.includes("update")){
-    resp = "Atualizações são instantâneas: edite o config.json no repositório; o app baixa na próxima abertura.";
-  }else if(txt.includes("apk") && (txt.includes("gerar") || txt.includes("converter"))){
-    resp = "Use um gerador de APK por WebView apontando para este index.html (local ou hospedado). O APK será a casca; o repositório é o cérebro.";
-  }else if(txt.includes("mudar") && (txt.includes("nome") || txt.includes("título"))){
-    resp = "Troque o campo 'nome' no config.json do repositório (ou edite o FALLBACK_CONFIG.nome no arquivo).";
-  }else{
-    resp = "Dica: defina BASE_URL para seu repositório e crie um config.json com { nome, inicial, abas[], ajudaHTML }. O app se monta sozinho.";
-  }
+      // remove "iara" no início, se houver
+      const cleaned = txt.replace(/^iara[, ]*/,'').trim();
 
-  box.innerHTML = `<div class="pill">IA</div> ${resp}`;
-}
+      // Intenções simples
+      if(/^paus(ar)?$/.test(cleaned) || cleaned.includes("pausar")) { player?.pauseVideo(); log("Iara: pausando."); return; }
+      if(/^play$/.test(cleaned) || cleaned.includes("tocar") || cleaned.includes("reproduzir")) {
+        // "tocar X" -> busca e toca
+        const m = cleaned.match(/tocar|reproduzir/);
+        const q = cleaned.slice((m?.index ?? 0) + (m?.[0].length ?? 0)).trim();
+        if(q){ searchAndPlay(q); log(`Iara: procurando e tocando “${q}”.`); }
+        else { player?.playVideo(); log("Iara: reproduzindo."); }
+        return;
+      }
+      if(cleaned.includes("proximo") || cleaned.includes("próximo")) { player?.nextVideo(); log("Iara: próximo vídeo."); return; }
+      if(cleaned.includes("anterior") || cleaned.includes("voltar")) { player?.previousVideo(); log("Iara: vídeo anterior."); return; }
 
-// boot
-(async ()=>{
-  const ok = await carregarConfigRemota();
-  if(!ok && BASE_URL){
-    // mostra aviso, mas segue com fallback
-    const warn = ce("div","error");
-    warn.innerHTML = "Não foi possível carregar a configuração remota. Usando configuração local.";
-    q("main").prepend(warn);
-  }
-  montarUI();
-})();
-</script>
+      const volMatch = cleaned.match(/volume\s*(\d{1,3})/);
+      if(volMatch){
+        let v = Math.max(0, Math.min(100, parseInt(volMatch[1],10)));
+        player?.setVolume(v); $("#vol").value=v; $("#volVal").textContent=v+"%";
+        log(`Iara: volume em ${v}%.`); return;
+      }
+
+      // "abrir <id/url>"
+      if(cleaned.startsWith("abrir ")){
+        const rest = cleaned.replace("abrir","").trim();
+        // extrai id do YouTube se for URL
+        const id = extractYouTubeId(rest);
+        if(id){ player?.loadVideoById(id); log("Iara: abrindo vídeo solicitado."); }
+        else { searchAndPlay(rest); }
+        return;
+      }
+
+      // fallback: trata como busca
+      searchAndPlay(cleaned);
+      log(`Iara: entendí como busca por “${cleaned}”.`);
+    }
+
+    function extractYouTubeId(text){
+      try{
+        const url = new URL(text);
+        if(url.hostname.includes("youtube.com")) return url.searchParams.get("v");
+        if(url.hostname.includes("youtu.be")) return url.pathname.slice(1);
+      }catch(_){}
+      // talvez já seja um ID
+      if(/^[\w-]{11}$/.test(text)) return text;
+      return null;
+    }
+
+    // ===== Iara (voz) =====
+    let rec, listening=false;
+    function supportsSpeech(){
+      return 'webkitSpeechRecognition' in window || 'SpeechRecognition' in window;
+    }
+    if(supportsSpeech()){
+      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+      rec = new SR();
+      rec.lang = 'pt-BR';
+      rec.interimResults = false;
+      rec.maxAlternatives = 1;
+      rec.onresult = (e)=>{
+        const said = e.results[0][0].transcript;
+        $("#cmd").value = said;
+        log("🎤 Você disse: " + said);
+        handleCommand(said);
+      };
+      rec.onend = ()=>{ listening=false; $("#micBtn").textContent = "🎤 Falar"; log("🎤 microfone parado."); };
+      rec.onerror = (e)=>{ listening=false; $("#micBtn").textContent = "🎤 Falar"; log("⚠️ Erro no microfone: "+ e.error); };
+    } else {
+      $("#micBtn").disabled = true;
+      $("#micBtn").title = "Seu navegador não suporta reconhecimento de voz";
+    }
+    $("#micBtn").onclick = ()=>{
+      if(!rec){ log("⚠️ Voz não suportada neste navegador."); return; }
+      if(listening){ rec.stop(); return; }
+      listening = true; $("#micBtn").textContent = "🛑 Parar";
+      log("🎤 ouvindo… fale um comando para a Iara.");
+      rec.start();
+    };
+
+    // ===== Carregamento do script do YouTube API =====
+    (function loadYT(){
+      const tag = document.createElement('script');
+      tag.src = "https://www.youtube.com/iframe_api";
+      document.head.appendChild(tag);
+    })();
+  </script>
 </body>
 </html>
