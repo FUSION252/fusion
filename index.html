@@ -5,277 +5,132 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Fênix • Iara Player</title>
 <style>
-  :root{
-    --bg:#0b0b0e; --card:#121219; --ink:#e7e7ef; --muted:#a7a7bd; --accent:#8a5cff;
-    --accent2:#43d3b6; --danger:#ff5c7a;
+  body {
+    margin:0; font-family:system-ui, sans-serif;
+    background:linear-gradient(180deg,#0a0a10 0%, #0c0c14 60%, #0f0f17 100%);
+    color:#fff;
   }
-  *{box-sizing:border-box}
-  body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Helvetica Neue',Arial;
-       background:linear-gradient(180deg,#0a0a10 0%, #0c0c14 60%, #0f0f17 100%);
-       color:var(--ink)}
-  .topbar{
-    position:sticky;top:0;z-index:50;
-    display:flex;align-items:center;gap:.8rem;
-    padding:.9rem 1rem;background:rgba(10,10,16,.9);backdrop-filter:blur(6px);
-    border-bottom:1px solid rgba(255,255,255,.06)
+  .topbar {
+    text-align:center; padding:1rem; font-size:1.3rem;
+    font-weight:700; letter-spacing:.5px;
+    background:rgba(0,0,0,.6); backdrop-filter:blur(6px);
   }
-  .logo{
-    display:flex;align-items:center;gap:.6rem;font-weight:700;letter-spacing:.3px
+  .topbar span { color:#ff5c7a; }
+  .player-card {
+    max-width:1000px; margin:1rem auto; background:#121219;
+    border-radius:16px; overflow:hidden; box-shadow:0 8px 25px rgba(0,0,0,.4);
   }
-  .badge{font-size:.75rem;padding:.18rem .5rem;border-radius:999px;background:rgba(138,92,255,.18);color:#cab6ff}
-  .shell{max-width:1100px;margin:1rem auto;padding:0 1rem}
-  .player-card{background:var(--card);border:1px solid rgba(255,255,255,.06);
-    border-radius:18px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.35)}
-  .player-wrap{position:relative;aspect-ratio:16/9;background:#000}
-  #player{position:absolute;inset:0}
-  .controls{
-    display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;justify-content:space-between;
-    padding:.7rem .9rem;border-top:1px solid rgba(255,255,255,.06);background:rgba(0,0,0,.25)
+  .player-wrap { position:relative; aspect-ratio:16/9; background:#000; }
+  #player { position:absolute; inset:0; }
+  .controls {
+    display:flex; flex-wrap:wrap; gap:.5rem; justify-content:center;
+    padding:.7rem; background:rgba(0,0,0,.35);
   }
-  .btn{
-    display:inline-flex;align-items:center;gap:.45rem;
-    padding:.6rem .85rem;border:1px solid rgba(255,255,255,.08);
-    background:rgba(255,255,255,.03);color:var(--ink);cursor:pointer;border-radius:12px;
-    user-select:none;transition:.15s transform ease, .15s background ease
+  .btn {
+    padding:.6rem 1rem; border-radius:12px; border:0; cursor:pointer;
+    font-size:.95rem; background:#1f1f28; color:#fff; transition:.2s;
   }
-  .btn:hover{background:rgba(255,255,255,.07)}
-  .btn:active{transform:translateY(1px)}
-  .btn.primary{background:linear-gradient(135deg,var(--accent),#6b44ff);border-color:transparent}
-  .btn.danger{background:linear-gradient(135deg,var(--danger),#ff2f66);border-color:transparent}
-  .row{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center}
-  .input{
-    flex:1;min-width:220px;display:flex;align-items:center;gap:.5rem;background:rgba(255,255,255,.04);
-    border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:.5rem .7rem
+  .btn:hover { background:#2b2b38; }
+  .btn.primary { background:linear-gradient(135deg,#8a5cff,#6b44ff); }
+  .btn.danger { background:linear-gradient(135deg,#ff5c7a,#ff2f66); }
+  .footer {
+    text-align:center; margin:1.5rem 0; opacity:.85; font-size:.9rem;
   }
-  .input input{flex:1;background:transparent;border:0;outline:0;color:var(--ink);font-size:.95rem}
-  .hint{color:var(--muted);font-size:.85rem}
-  .grid{display:grid;gap:1rem;margin-top:1rem}
-  @media(min-width:900px){ .grid{grid-template-columns:1.3fr .7fr} }
-  .panel{background:var(--card);border:1px solid rgba(255,255,255,.06);border-radius:18px;padding:1rem}
-  .panel h3{margin:.2rem 0  .7rem 0;font-size:1rem;color:#dcdcf3}
-  .log{
-    height:180px;overflow:auto;background:rgba(0,0,0,.25);border:1px dashed rgba(255,255,255,.12);
-    border-radius:12px;padding:.6rem;font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-    font-size:.9rem;line-height:1.35;color:#d9e2ff
-  }
-  .vol{display:flex;align-items:center;gap:.6rem}
-  input[type="range"]{width:150px}
-  .pill{font-size:.8rem;color:#cfe; background:rgba(67,211,182,.18); padding:.2rem .5rem; border-radius:999px}
-  .footer{opacity:.8;text-align:center;margin:1rem 0 2rem}
 </style>
 </head>
 <body>
-  <div class="topbar">
-    <div class="logo">
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M12 2l2.39 4.847 5.35.777-3.87 3.77.913 5.324L12 14.77l-4.783 2.948.913-5.324-3.87-3.77 5.35-.777L12 2z" stroke="#8a5cff" stroke-width="1.2" fill="none"/></svg>
-      <span>Fênix</span><span class="badge">Iara • IA integrada</span>
+  <div class="topbar">🔥 Fênix Player <span>• Iara</span></div>
+
+  <div class="player-card">
+    <div class="player-wrap"><div id="player"></div></div>
+    <div class="controls">
+      <button class="btn" id="prevBtn">⏮️</button>
+      <button class="btn primary" id="playBtn">▶️</button>
+      <button class="btn" id="pauseBtn">⏸️</button>
+      <button class="btn" id="nextBtn">⏭️</button>
+      <button class="btn" id="muteBtn">🔇</button>
+      <button class="btn" id="fsBtn">⛶</button>
+      <button class="btn danger" id="micBtn">🎤 Iara</button>
     </div>
   </div>
 
-  <div class="shell">
-    <div class="player-card">
-      <div class="player-wrap">
-        <div id="player"></div>
-      </div>
-      <div class="controls">
-        <div class="row">
-          <button class="btn" id="prevBtn">⏮️ Anterior</button>
-          <button class="btn primary" id="playBtn">▶️ Reproduzir</button>
-          <button class="btn" id="pauseBtn">⏸️ Pausar</button>
-          <button class="btn" id="nextBtn">⏭️ Próximo</button>
-          <button class="btn" id="muteBtn">🔇 Mudo</button>
-          <div class="vol">
-            <span class="hint">🔊</span>
-            <input type="range" id="vol" min="0" max="100" value="80" />
-            <span class="hint" id="volVal">80%</span>
-          </div>
-          <button class="btn" id="fsBtn">⛶ Tela inteira</button>
-        </div>
-        <div class="row" style="flex:1">
-          <div class="input" title="Buscar no YouTube e tocar aqui">
-            <span>🔎</span>
-            <input id="search" placeholder="Buscar e tocar (ex: músicas relaxantes)" />
-          </div>
-          <button class="btn" id="searchBtn">Buscar & Tocar</button>
-        </div>
-      </div>
-    </div>
+  <div class="footer">Feito com 💜 por nós dois • Fênix + Iara</div>
 
-    <div class="grid">
-      <div class="panel">
-        <h3>Iara (texto ou voz) <span class="pill">comandos naturais</span></h3>
-        <div class="row">
-          <div class="input" title='Ex: "Iara, tocar Legião Urbana", "Iara, próximo", "Iara, volume 60"'>
-            <span>💬</span>
-            <input id="cmd" placeholder='Diga: "Iara, tocar música para dormir"…' />
-          </div>
-          <button class="btn" id="runCmd">Executar</button>
-          <button class="btn" id="micBtn">🎤 Falar</button>
-        </div>
-        <p class="hint" style="margin:.6rem 0 0 0">
-          Exemplos: <em>Iara, tocar rock nacional</em> • <em>Iara, pausar</em> • <em>Iara, próximo</em> • <em>Iara, volume 40</em> • <em>Iara, voltar</em>
-        </p>
-      </div>
+<script>
+  let player, isMuted=false, rec, listening=false;
+  let currentQuery="músicas relaxantes";
 
-      <div class="panel">
-        <h3>Diálogo / Status</h3>
-        <div id="log" class="log"></div>
-      </div>
-    </div>
+  // ===== Player YouTube =====
+  function onYouTubeIframeAPIReady(){
+    player = new YT.Player('player', {
+      height:'100%', width:'100%',
+      playerVars:{ modestbranding:1, rel:0, controls:1, listType:'search', list:currentQuery },
+      events:{ 'onReady': ()=>player.setVolume(80) }
+    });
+  }
 
-    <div class="footer hint">Feito com carinho por nós dois • Fênix + Iara 💜</div>
-  </div>
+  // Botões
+  document.getElementById("playBtn").onclick = ()=>player?.playVideo();
+  document.getElementById("pauseBtn").onclick = ()=>player?.pauseVideo();
+  document.getElementById("nextBtn").onclick = ()=>player?.nextVideo();
+  document.getElementById("prevBtn").onclick = ()=>player?.previousVideo();
+  document.getElementById("muteBtn").onclick = ()=>{
+    if(!player) return;
+    isMuted ? player.unMute() : player.mute();
+    isMuted=!isMuted;
+  };
+  document.getElementById("fsBtn").onclick = ()=>{
+    const wrap=document.querySelector(".player-wrap");
+    if(document.fullscreenElement){ document.exitFullscreen(); }
+    else { wrap.requestFullscreen?.(); }
+  };
 
-  <!-- YouTube IFrame API -->
-  <script>
-    // ===== Util =====
-    const $ = (sel)=>document.querySelector(sel);
-    const log = (msg)=>{ const box=$("#log"); const t=new Date().toLocaleTimeString(); box.innerHTML += `[${t}] ${msg}<br/>`; box.scrollTop=box.scrollHeight; };
+  function searchAndPlay(q){
+    if(!q||!player) return;
+    player.loadPlaylist({ listType:'search', list:q });
+  }
 
-    // ===== Player =====
-    let player, currentQuery = "músicas relaxantes";
-    let isMuted = false;
-
-    function onYouTubeIframeAPIReady(){
-      player = new YT.Player('player', {
-        height: '100%',
-        width: '100%',
-        // Carrega uma "playlist de pesquisa" sem precisar de API key:
-        playerVars: { modestbranding:1, rel:0, controls:1, fs:1, iv_load_policy:3, color:'white', listType:'search', list: currentQuery },
-        events: {
-          'onReady': onPlayerReady,
-          'onError': (e)=>log("Erro no player: "+e.data)
-        }
-      });
-    }
-    function onPlayerReady(){
-      log("Player pronto. Buscando: " + currentQuery);
-      player.setVolume(80);
-    }
-
-    // ===== Controles =====
-    $("#playBtn").onclick = ()=>{ player && player.playVideo(); log("▶️ Reproduzir"); };
-    $("#pauseBtn").onclick = ()=>{ player && player.pauseVideo(); log("⏸️ Pausar"); };
-    $("#nextBtn").onclick = ()=>{ player && player.nextVideo(); log("⏭️ Próximo"); };
-    $("#prevBtn").onclick = ()=>{ player && player.previousVideo(); log("⏮️ Anterior"); };
-    $("#muteBtn").onclick = ()=>{
-      if(!player) return;
-      isMuted ? (player.unMute(), log("🔊 Som ativado")) : (player.mute(), log("🔇 Som desativado"));
-      isMuted = !isMuted;
+  // ===== Iara Voz =====
+  function supportsSpeech(){ return 'webkitSpeechRecognition' in window || 'SpeechRecognition' in window; }
+  if(supportsSpeech()){
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    rec=new SR(); rec.lang='pt-BR'; rec.interimResults=false; rec.maxAlternatives=1;
+    rec.onresult=(e)=>{
+      const said=e.results[0][0].transcript.toLowerCase();
+      handleVoice(said);
     };
-    $("#vol").oninput = (e)=>{ const v=+e.target.value; $("#volVal").textContent = v+"%"; if(player) player.setVolume(v); };
-    $("#fsBtn").onclick = ()=>{
-      const card = document.querySelector(".player-wrap");
-      if(document.fullscreenElement){ document.exitFullscreen(); }
-      else { card.requestFullscreen?.(); }
-    };
+    rec.onend=()=>{ listening=false; micBtn.textContent="🎤 Iara"; };
+  } else { micBtn.disabled=true; }
 
-    // ===== Busca direta =====
-    function searchAndPlay(q){
-      if(!q || !player) return;
-      currentQuery = q;
-      // Troca a "lista por busca": playlist dinâmica com resultados da pesquisa
-      player.loadPlaylist({ listType:'search', list:q, index:0, startSeconds:0, suggestedQuality:'default' });
-      log("🔎 Tocando resultados para: " + q);
+  function handleVoice(cmd){
+    if(cmd.includes("pausar")) return player?.pauseVideo();
+    if(cmd.includes("tocar")||cmd.includes("reproduzir")){
+      let q=cmd.replace("iara","").replace("tocar","").replace("reproduzir","").trim();
+      if(q) searchAndPlay(q); else player?.playVideo();
+      return;
     }
-    $("#searchBtn").onclick = ()=> searchAndPlay($("#search").value.trim());
-    $("#search").addEventListener('keydown', (e)=>{ if(e.key==='Enter') $("#searchBtn").click(); });
-
-    // ===== Iara (texto) =====
-    $("#runCmd").onclick = ()=> handleCommand( $("#cmd").value.trim() );
-    $("#cmd").addEventListener('keydown', (e)=>{ if(e.key==='Enter') $("#runCmd").click(); });
-
-    function handleCommand(raw){
-      if(!raw){ log("Iara: diga algo como “Iara, tocar …”"); return; }
-      const txt = raw.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
-      log("Você: " + raw);
-
-      // remove "iara" no início, se houver
-      const cleaned = txt.replace(/^iara[, ]*/,'').trim();
-
-      // Intenções simples
-      if(/^paus(ar)?$/.test(cleaned) || cleaned.includes("pausar")) { player?.pauseVideo(); log("Iara: pausando."); return; }
-      if(/^play$/.test(cleaned) || cleaned.includes("tocar") || cleaned.includes("reproduzir")) {
-        // "tocar X" -> busca e toca
-        const m = cleaned.match(/tocar|reproduzir/);
-        const q = cleaned.slice((m?.index ?? 0) + (m?.[0].length ?? 0)).trim();
-        if(q){ searchAndPlay(q); log(`Iara: procurando e tocando “${q}”.`); }
-        else { player?.playVideo(); log("Iara: reproduzindo."); }
-        return;
-      }
-      if(cleaned.includes("proximo") || cleaned.includes("próximo")) { player?.nextVideo(); log("Iara: próximo vídeo."); return; }
-      if(cleaned.includes("anterior") || cleaned.includes("voltar")) { player?.previousVideo(); log("Iara: vídeo anterior."); return; }
-
-      const volMatch = cleaned.match(/volume\s*(\d{1,3})/);
-      if(volMatch){
-        let v = Math.max(0, Math.min(100, parseInt(volMatch[1],10)));
-        player?.setVolume(v); $("#vol").value=v; $("#volVal").textContent=v+"%";
-        log(`Iara: volume em ${v}%.`); return;
-      }
-
-      // "abrir <id/url>"
-      if(cleaned.startsWith("abrir ")){
-        const rest = cleaned.replace("abrir","").trim();
-        // extrai id do YouTube se for URL
-        const id = extractYouTubeId(rest);
-        if(id){ player?.loadVideoById(id); log("Iara: abrindo vídeo solicitado."); }
-        else { searchAndPlay(rest); }
-        return;
-      }
-
-      // fallback: trata como busca
-      searchAndPlay(cleaned);
-      log(`Iara: entendí como busca por “${cleaned}”.`);
+    if(cmd.includes("próximo")) return player?.nextVideo();
+    if(cmd.includes("anterior")||cmd.includes("voltar")) return player?.previousVideo();
+    if(cmd.includes("volume")){
+      let m=cmd.match(/volume\s*(\d{1,3})/); if(m){ let v=Math.min(100,Math.max(0,parseInt(m[1]))); player?.setVolume(v); }
+      return;
     }
+    // Busca genérica
+    searchAndPlay(cmd);
+  }
 
-    function extractYouTubeId(text){
-      try{
-        const url = new URL(text);
-        if(url.hostname.includes("youtube.com")) return url.searchParams.get("v");
-        if(url.hostname.includes("youtu.be")) return url.pathname.slice(1);
-      }catch(_){}
-      // talvez já seja um ID
-      if(/^[\w-]{11}$/.test(text)) return text;
-      return null;
-    }
+  const micBtn=document.getElementById("micBtn");
+  micBtn.onclick=()=>{
+    if(!rec) return alert("Voz não suportada aqui");
+    if(listening){ rec.stop(); return; }
+    listening=true; micBtn.textContent="🛑 Parar";
+    rec.start();
+  };
 
-    // ===== Iara (voz) =====
-    let rec, listening=false;
-    function supportsSpeech(){
-      return 'webkitSpeechRecognition' in window || 'SpeechRecognition' in window;
-    }
-    if(supportsSpeech()){
-      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-      rec = new SR();
-      rec.lang = 'pt-BR';
-      rec.interimResults = false;
-      rec.maxAlternatives = 1;
-      rec.onresult = (e)=>{
-        const said = e.results[0][0].transcript;
-        $("#cmd").value = said;
-        log("🎤 Você disse: " + said);
-        handleCommand(said);
-      };
-      rec.onend = ()=>{ listening=false; $("#micBtn").textContent = "🎤 Falar"; log("🎤 microfone parado."); };
-      rec.onerror = (e)=>{ listening=false; $("#micBtn").textContent = "🎤 Falar"; log("⚠️ Erro no microfone: "+ e.error); };
-    } else {
-      $("#micBtn").disabled = true;
-      $("#micBtn").title = "Seu navegador não suporta reconhecimento de voz";
-    }
-    $("#micBtn").onclick = ()=>{
-      if(!rec){ log("⚠️ Voz não suportada neste navegador."); return; }
-      if(listening){ rec.stop(); return; }
-      listening = true; $("#micBtn").textContent = "🛑 Parar";
-      log("🎤 ouvindo… fale um comando para a Iara.");
-      rec.start();
-    };
-
-    // ===== Carregamento do script do YouTube API =====
-    (function loadYT(){
-      const tag = document.createElement('script');
-      tag.src = "https://www.youtube.com/iframe_api";
-      document.head.appendChild(tag);
-    })();
-  </script>
+  // Carrega API YouTube
+  const tag=document.createElement('script');
+  tag.src="https://www.youtube.com/iframe_api";
+  document.head.appendChild(tag);
+</script>
 </body>
 </html>
