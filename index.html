@@ -2,235 +2,161 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Fênix • Iara Player</title>
-<meta name="theme-color" content="#0b0b0e">
+<meta name="theme-color" content="#0b0b0e" />
 <style>
-  :root{
-    --bg:#0b0b0e; --card:#121219; --ink:#e9e9f2; --muted:#a7a7bd;
-    --glow: rgba(138,92,255,.55); --accent:#8a5cff; --accent2:#43d3b6; --danger:#ff5c7a;
-  }
-  *{ box-sizing:border-box }
-  html,body{ height:100%; }
-  body{
-    margin:0; font-family:ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, "Helvetica Neue", Arial;
-    background: radial-gradient(1200px 600px at 20% -10%, rgba(138,92,255,.12), transparent 60%),
-                radial-gradient(1200px 600px at 120% 10%, rgba(67,211,182,.10), transparent 60%),
-                #0b0b0e;
-    color:var(--ink);
-  }
-  .topbar{
-    position:sticky; top:0; z-index:50; display:flex; align-items:center; justify-content:space-between;
-    padding:.9rem 1rem; background:rgba(10,10,16,.86); backdrop-filter: blur(8px);
-    border-bottom:1px solid rgba(255,255,255,.06)
-  }
-  .brand{ display:flex; align-items:center; gap:.6rem; font-weight:700; letter-spacing:.25px }
-  .brand .dot{
-    width:22px; height:22px; border-radius:6px;
-    background: conic-gradient(from 200deg, var(--accent), #6b44ff 40%, #4f39f7 60%);
-    box-shadow: 0 0 18px var(--glow), inset 0 0 12px rgba(255,255,255,.14);
-  }
-  .shell{ max-width:1120px; margin:1.1rem auto; padding:0 1rem; }
-  .card{
-    background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.00));
-    border:1px solid rgba(255,255,255,.07); border-radius:18px; overflow:hidden;
-    box-shadow:0 18px 40px rgba(0,0,0,.35)
-  }
-  .player-wrap{ position:relative; aspect-ratio:16/9; background:#000 }
-  #player{ position:absolute; inset:0; }
-  .controls{
-    display:flex; flex-wrap:wrap; gap:.6rem; align-items:center; justify-content:space-between;
-    padding:.8rem .9rem; border-top:1px solid rgba(255,255,255,.06); background:rgba(0,0,0,.18)
-  }
-  .row{ display:flex; flex-wrap:wrap; gap:.6rem; align-items:center }
-  .btn{
-    display:inline-flex; align-items:center; gap:.45rem; font-weight:600;
-    padding:.6rem .9rem; border:1px solid rgba(255,255,255,.08);
-    background:rgba(255,255,255,.03); color:var(--ink); border-radius:12px; cursor:pointer;
-    transition: .15s ease; user-select:none;
-  }
-  .btn:hover{ background:rgba(255,255,255,.07) }
-  .btn:active{ transform:translateY(1px) }
-  .btn.primary{ background:linear-gradient(135deg,var(--accent),#6b44ff); border-color:transparent; }
-  .btn.danger{ background:linear-gradient(135deg,var(--danger),#ff2f66); border-color:transparent; }
-  .input{
-    flex:1; min-width:240px; display:flex; align-items:center; gap:.55rem;
-    background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08);
-    border-radius:12px; padding:.55rem .75rem;
-  }
-  .input input{
-    flex:1; background:transparent; border:0; outline:0; color:var(--ink); font-size:.98rem;
-  }
-  .muted{ color:var(--muted); font-size:.88rem }
-  .grid{ display:grid; gap:1rem; margin-top:1rem }
-  @media(min-width:900px){ .grid{ grid-template-columns:1.35fr .65fr } }
-  .panel{ background:rgba(255,255,255,.02); border:1px solid rgba(255,255,255,.06); border-radius:18px; padding:1rem }
-  .panel h3{ margin:.2rem 0 .7rem 0; font-size:1rem; color:#dde0ff }
-  .log{
-    height:190px; overflow:auto; background:rgba(0,0,0,.25);
-    border:1px dashed rgba(255,255,255,.12); border-radius:12px; padding:.65rem;
-    font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:.9rem; line-height:1.35; color:#d9e2ff;
-  }
-  .footer{ text-align:center; opacity:.75; margin:1rem 0 2rem }
+  :root{--bg:#0b0b0e;--card:#121219;--ink:#e9e9f4;--muted:#a7a7bd;--accent:#8a5cff;--danger:#ff5c7a}
+  *{box-sizing:border-box} body{margin:0;background:#0a0a10;color:var(--ink);
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial}
+  .wrap{max-width:980px;margin:0 auto;padding:16px}
+  .bar{position:sticky;top:0;z-index:20;background:rgba(10,10,16,.9);backdrop-filter:blur(6px);
+    border-bottom:1px solid rgba(255,255,255,.06);padding:12px 16px;display:flex;align-items:center;gap:10px}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:700}
+  .brand svg{filter:drop-shadow(0 4px 14px rgba(138,92,255,.45))}
+  .tag{font-size:.75rem;padding:.15rem .5rem;border-radius:999px;background:rgba(138,92,255,.18);color:#d7c9ff}
+  .card{background:var(--card);border:1px solid rgba(255,255,255,.06);border-radius:16px;overflow:hidden;
+    box-shadow:0 10px 28px rgba(0,0,0,.35)}
+  .stage{position:relative;aspect-ratio:16/9;background:#000}
+  #player{position:absolute;inset:0}
+  .controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;
+    padding:10px;border-top:1px solid rgba(255,255,255,.06);background:rgba(0,0,0,.25)}
+  .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+  .btn{display:inline-flex;align-items:center;gap:6px;padding:.55rem .8rem;border-radius:12px;
+    border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);color:var(--ink);cursor:pointer}
+  .btn:hover{background:rgba(255,255,255,.07)} .btn.primary{background:linear-gradient(135deg,var(--accent),#6b44ff);border-color:transparent}
+  .input{flex:1;min-width:220px;display:flex;align-items:center;gap:.5rem;background:rgba(255,255,255,.04);
+    border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:.5rem .7rem}
+  .input input{flex:1;background:transparent;border:0;outline:0;color:var(--ink);font-size:.95rem}
+  .hint{color:var(--muted);font-size:.85rem}
+  .panels{display:grid;gap:12px;margin-top:12px} @media(min-width:900px){.panels{grid-template-columns:1.3fr .7fr}}
+  .panel{background:var(--card);border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:12px}
+  .panel h3{margin:4px 0 10px 0;font-size:1rem;color:#dcdcf3}
+  .log{height:170px;overflow:auto;background:rgba(0,0,0,.25);border:1px dashed rgba(255,255,255,.12);
+    border-radius:12px;padding:.6rem;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.9rem;line-height:1.35;color:#d9e2ff}
+  .footer{opacity:.7;text-align:center;margin:14px 0}
+  .vol{display:flex;align-items:center;gap:6px} input[type="range"]{width:140px}
 </style>
 </head>
 <body>
-  <header class="topbar">
+  <div class="bar">
     <div class="brand">
-      <span class="dot"></span>
-      <span>Fênix</span>
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M12 2l2.39 4.85 5.35.78-3.87 3.77.91 5.33L12 14.8 7.22 16.73l.91-5.33-3.87-3.77 5.35-.78L12 2z" stroke="#8a5cff" stroke-width="1.2"/></svg>
+      <span>Fênix</span><span class="tag">Iara</span>
     </div>
-    <span class="muted">Iara ativada</span>
-  </header>
+  </div>
 
-  <main class="shell">
-    <section class="card">
-      <div class="player-wrap"><div id="player" aria-label="reprodutor de vídeo"></div></div>
+  <div class="wrap">
+    <div class="card">
+      <div class="stage"><div id="player"></div></div>
       <div class="controls">
         <div class="row">
-          <button class="btn" id="prevBtn">⏮️</button>
-          <button class="btn primary" id="playBtn">▶️</button>
-          <button class="btn" id="pauseBtn">⏸️</button>
-          <button class="btn" id="nextBtn">⏭️</button>
-          <button class="btn" id="muteBtn">🔇</button>
-          <label class="muted" style="display:flex;align-items:center;gap:.5rem">🔊
-            <input type="range" id="vol" min="0" max="100" value="80" />
-            <span id="volVal" class="muted">80%</span>
-          </label>
-          <button class="btn" id="fsBtn">⛶</button>
+          <button class="btn" id="prev">⏮️</button>
+          <button class="btn primary" id="play">▶️</button>
+          <button class="btn" id="pause">⏸️</button>
+          <button class="btn" id="next">⏭️</button>
+          <button class="btn" id="mute">🔇</button>
+          <div class="vol"><span class="hint">🔊</span><input type="range" id="vol" min="0" max="100" value="80"><span class="hint" id="volVal">80%</span></div>
+          <button class="btn" id="fs">⛶</button>
         </div>
         <div class="row" style="flex:1">
-          <div class="input" title="Buscar no YouTube e tocar aqui">
-            <span>🔎</span>
-            <input id="search" placeholder="Buscar e tocar (ex.: músicas relaxantes)" autocomplete="off" />
-          </div>
-          <button class="btn" id="searchBtn">Buscar</button>
+          <div class="input"><span>🔎</span><input id="q" placeholder="Buscar e tocar (ex.: músicas relaxantes)"></div>
+          <button class="btn" id="go">Buscar & Tocar</button>
         </div>
       </div>
-    </section>
+    </div>
 
-    <section class="grid">
+    <div class="panels">
       <div class="panel">
-        <h3>Iara (texto/voz)</h3>
+        <h3>Iara — comandos por texto/voz</h3>
         <div class="row">
-          <div class="input" title='Ex.: "Iara, tocar Legião Urbana", "Iara, volume 60"'>
-            <span>💬</span>
-            <input id="cmd" placeholder='Diga: "Iara, tocar rock nacional"…' />
-          </div>
-          <button class="btn" id="runCmd">Executar</button>
-          <button class="btn" id="micBtn">🎤 Falar</button>
+          <div class="input"><span>💬</span><input id="cmd" placeholder='Ex.: "Iara, tocar rock nacional" • "Iara, pausar" • "Iara, próximo" • "Iara, volume 60"' /></div>
+          <button class="btn" id="run">Executar</button>
+          <button class="btn" id="mic">🎤 Falar</button>
         </div>
-        <p class="muted" style="margin:.6rem 0 0 0">
-          Comandos: <em>Iara, tocar &lt;termo&gt;</em> • <em>Iara, pausar</em> • <em>Iara, próximo</em> •
-          <em>Iara, anterior</em> • <em>Iara, volume 40</em> • <em>Iara, tela cheia</em>.
-        </p>
+        <p class="hint" style="margin:.6rem 0 0 0">Dicas: <em>Iara, tocar Legião Urbana</em> • <em>Iara, pausar</em> • <em>Iara, próximo</em> • <em>Iara, anterior</em> • <em>Iara, volume 40</em></p>
       </div>
       <div class="panel">
         <h3>Status</h3>
-        <div id="log" class="log" aria-live="polite"></div>
+        <div id="log" class="log"></div>
       </div>
-    </section>
+    </div>
 
-    <p class="footer muted">Feito pra você, com amor. 💜</p>
-  </main>
+    <div class="footer hint">Feito com carinho • Fênix + Iara 💜</div>
+  </div>
 
-  <!-- ===== Lógica ===== -->
   <script>
     // Util
-    const $ = (s)=>document.querySelector(s);
-    const log = (m)=>{ const b=$("#log"); const t=new Date().toLocaleTimeString(); b.innerHTML += `[${t}] ${m}<br/>`; b.scrollTop=b.scrollHeight; };
+    const $ = s => document.querySelector(s);
+    const log = m => { const box=$("#log"); const t=new Date().toLocaleTimeString(); box.innerHTML+=`[${t}] ${m}<br>`; box.scrollTop=box.scrollHeight; };
 
-    // Estado
+    // Player
     let player, isMuted=false, currentQuery="músicas relaxantes";
-
-    // YouTube IFrame API
     function onYouTubeIframeAPIReady(){
       player = new YT.Player('player', {
-        height: '100%', width:'100%',
-        playerVars:{
-          modestbranding:1, rel:0, controls:1, fs:1, iv_load_policy:3,
-          color:'white', listType:'search', list: currentQuery
-        },
-        events:{
-          onReady: onPlayerReady,
-          onError: e=>log("Erro do player: "+e.data)
-        }
+        height:'100%', width:'100%',
+        playerVars:{modestbranding:1, rel:0, controls:1, fs:1, iv_load_policy:3, color:'white', listType:'search', list: currentQuery},
+        events:{ onReady: onReady, onError: e=>log("Erro do player: "+e.data) }
       });
     }
-    function onPlayerReady(){
-      try{ player.setVolume(80); }catch(_){}
-      log("Player pronto. Pesquisando: " + currentQuery);
-    }
+    function onReady(){ log("Player pronto. Clique ▶️ para iniciar."); player.setVolume(80); }
 
     // Controles
-    $("#playBtn").onclick = ()=>{ try{ player.playVideo(); log("▶️ Reproduzir"); }catch(_){} };
-    $("#pauseBtn").onclick= ()=>{ try{ player.pauseVideo(); log("⏸️ Pausar"); }catch(_){ } };
-    $("#nextBtn").onclick = ()=>{ try{ player.nextVideo(); log("⏭️ Próximo"); }catch(_){ } };
-    $("#prevBtn").onclick = ()=>{ try{ player.previousVideo(); log("⏮️ Anterior"); }catch(_){ } };
-    $("#muteBtn").onclick = ()=>{
+    $("#play").onclick = ()=>{ player?.playVideo(); log("▶️ Reproduzir"); };
+    $("#pause").onclick= ()=>{ player?.pauseVideo(); log("⏸️ Pausar"); };
+    $("#next").onclick = ()=>{ player?.nextVideo(); log("⏭️ Próximo"); };
+    $("#prev").onclick = ()=>{ player?.previousVideo(); log("⏮️ Anterior"); };
+    $("#mute").onclick = ()=>{
       if(!player) return;
-      if(isMuted){ player.unMute(); log("🔊 Som ativado"); }
-      else{ player.mute(); log("🔇 Som desativado"); }
+      isMuted ? (player.unMute(), log("🔊 Som ativado")) : (player.mute(), log("🔇 Mudo"));
       isMuted=!isMuted;
     };
-    $("#vol").oninput = (e)=>{ const v=+e.target.value; $("#volVal").textContent=v+"%"; try{ player.setVolume(v); }catch(_){} };
-    $("#fsBtn").onclick = ()=>{
-      const el = document.querySelector(".player-wrap");
-      if(document.fullscreenElement){ document.exitFullscreen(); }
-      else{ el.requestFullscreen?.(); }
+    $("#vol").oninput = e=>{ const v=+e.target.value; $("#volVal").textContent=v+"%"; player?.setVolume(v); };
+    $("#fs").onclick = ()=>{
+      const el = document.querySelector(".stage");
+      if(document.fullscreenElement) document.exitFullscreen();
+      else el.requestFullscreen?.();
     };
 
     // Busca
     function searchAndPlay(q){
       if(!q || !player) return;
-      currentQuery = q;
-      try{
-        player.loadPlaylist({ listType:'search', list:q, index:0, startSeconds:0, suggestedQuality:'default' });
-        log("🔎 Tocando resultados para: " + q);
-      }catch(err){ log("Falha ao trocar playlist: "+err.message); }
+      currentQuery=q;
+      player.loadPlaylist({ listType:'search', list:q, index:0, startSeconds:0, suggestedQuality:'default' });
+      log("🔎 Tocando resultados para: "+q);
     }
-    $("#searchBtn").onclick = ()=> searchAndPlay($("#search").value.trim());
-    $("#search").addEventListener('keydown', e=>{ if(e.key==='Enter') $("#searchBtn").click(); });
+    $("#go").onclick = ()=> searchAndPlay( $("#q").value.trim() );
+    $("#q").addEventListener('keydown', e=>{ if(e.key==='Enter') $("#go").click(); });
 
-    // Iara (texto)
-    $("#runCmd").onclick = ()=> handleCommand( $("#cmd").value.trim() );
-    $("#cmd").addEventListener('keydown', e=>{ if(e.key==='Enter') $("#runCmd").click(); });
+    // Comandos Iara (texto)
+    $("#run").onclick = ()=> handleCmd( $("#cmd").value.trim() );
+    $("#cmd").addEventListener('keydown', e=>{ if(e.key==='Enter') $("#run").click(); });
 
-    function handleCommand(raw){
-      if(!raw){ log("Iara: me diga o que tocar 💜"); return; }
+    function handleCmd(raw){
+      if(!raw){ log("Iara: diga algo como “Iara, tocar …”"); return; }
+      log("Você: "+raw);
       const txt = raw.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
-      log("Você: " + raw);
-      const cleaned = txt.replace(/^iara[, ]*/,'').trim();
+      const s = txt.replace(/^iara[, ]*/,'').trim();
 
-      if(/^(pausa|pausar|stop|parar)$/.test(cleaned)){ player?.pauseVideo(); log("Iara: pausando."); return; }
-      if(/^(play|reproduzir)$/.test(cleaned)){ player?.playVideo(); log("Iara: reproduzindo."); return; }
-      if(cleaned.includes("proximo")){ player?.nextVideo(); log("Iara: próximo vídeo."); return; }
-      if(cleaned.includes("anterior") || cleaned.includes("voltar")){ player?.previousVideo(); log("Iara: vídeo anterior."); return; }
-      if(cleaned.includes("tela cheia")){ $("#fsBtn").click(); log("Iara: tela cheia."); return; }
+      if(/^paus(ar)?$/.test(s) || s.includes("pausar")){ player?.pauseVideo(); log("Iara: pausando."); return; }
+      if(s.includes("proximo") || s.includes("próximo")){ player?.nextVideo(); log("Iara: próximo vídeo."); return; }
+      if(s.includes("anterior") || s.includes("voltar")){ player?.previousVideo(); log("Iara: vídeo anterior."); return; }
 
-      const vol = cleaned.match(/volume\s*(\d{1,3})/);
-      if(vol){
-        let v = Math.max(0, Math.min(100, parseInt(vol[1],10)));
-        $("#vol").value=v; $("#volVal").textContent=v+"%"; player?.setVolume(v);
-        log(`Iara: volume em ${v}%.`); return;
-      }
+      const vol = s.match(/volume\s*(\d{1,3})/);
+      if(vol){ let v=Math.max(0,Math.min(100,parseInt(vol[1],10))); player?.setVolume(v); $("#vol").value=v; $("#volVal").textContent=v+"%"; log(`Iara: volume em ${v}%.`); return; }
 
-      // "tocar X" / "reproduzir X"
-      const m = cleaned.match(/\b(tocar|reproduzir)\b\s*(.+)?/);
-      if(m && m[2]){ searchAndPlay(m[2]); log(`Iara: procurando “${m[2]}”.`); return; }
-
-      // "abrir <id/url>"
-      if(cleaned.startsWith("abrir ")){
-        const rest = cleaned.replace("abrir","").trim();
+      // "tocar X" / "reproduzir X" / "abrir <id/url>"
+      if(s.startsWith("abrir ")){
+        const rest = s.replace("abrir","").trim();
         const id = extractYouTubeId(rest);
-        if(id){ player?.loadVideoById(id); log("Iara: abrindo vídeo."); }
-        else { searchAndPlay(rest); }
-        return;
+        if(id){ player?.loadVideoById(id); log("Iara: abrindo vídeo solicitado."); return; }
       }
+      const m = s.match(/^(tocar|reproduzir)\s+(.+)$/);
+      if(m){ searchAndPlay(m[2].trim()); log(`Iara: procurando “${m[2].trim()}”.`); return; }
 
-      // fallback: trata como busca
-      searchAndPlay(cleaned);
-      log(`Iara: entendi como busca por “${cleaned}”.`);
+      // fallback: tratar como busca
+      searchAndPlay(s);
+      log(`Iara: buscando “${s}”.`);
     }
 
     function extractYouTubeId(text){
@@ -243,26 +169,26 @@
       return null;
     }
 
-    // Iara (voz)
+    // Voz (HTTPS necessário)
     let rec, listening=false;
-    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if(SR){
+    (function initVoice(){
+      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if(!SR){ $("#mic").disabled=true; $("#mic").title="Sem suporte de voz"; return; }
       rec = new SR(); rec.lang='pt-BR'; rec.interimResults=false; rec.maxAlternatives=1;
-      rec.onresult = (e)=>{ const said=e.results[0][0].transcript; $("#cmd").value=said; log("🎤 "+said); handleCommand(said); };
-      rec.onend = ()=>{ listening=false; $("#micBtn").textContent="🎤 Falar"; };
-      rec.onerror = (e)=>{ listening=false; $("#micBtn").textContent="🎤 Falar"; log("⚠️ Voz: "+e.error); };
-      $("#micBtn").onclick = ()=>{
-        if(listening){ rec.stop(); return; }
-        listening=true; $("#micBtn").textContent="🛑 Parar"; log("🎤 Ouvindo…");
-        try{ rec.start(); }catch(_){ listening=false; $("#micBtn").textContent="🎤 Falar"; }
-      };
-    } else {
-      $("#micBtn").disabled=true; $("#micBtn").title="Reconhecimento de voz não suportado";
-    }
+      rec.onresult = e=>{ const said=e.results[0][0].transcript; $("#cmd").value=said; log("🎤 Você: "+said); handleCmd(said); };
+      rec.onend = ()=>{ listening=false; $("#mic").textContent="🎤 Falar"; log("🎤 microfone parado."); };
+      rec.onerror = e=>{ listening=false; $("#mic").textContent="🎤 Falar"; log("⚠️ Voz: "+e.error); };
+    })();
+    $("#mic").onclick = ()=>{
+      if(!rec){ log("⚠️ Voz não suportada neste navegador."); return; }
+      if(listening){ rec.stop(); return; }
+      listening=true; $("#mic").textContent="🛑 Parar"; log("🎤 ouvindo…");
+      rec.start();
+    };
 
-    // Carregar API YouTube
+    // Carrega API do YouTube
     (function loadYT(){
-      const s=document.createElement('script');
+      const s = document.createElement('script');
       s.src="https://www.youtube.com/iframe_api";
       document.head.appendChild(s);
     })();
